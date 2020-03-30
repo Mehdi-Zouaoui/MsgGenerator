@@ -15,6 +15,7 @@ class LoginForm extends React.Component{
     handleSubmit(event) {
         console.log('Le mot de passe a été soumis : ' + this.state.password);
         event.preventDefault();
+        this.props.history.push('/homepage');
         axios.post('/login' , this.state)
             .then(res => {
                 console.log(res)

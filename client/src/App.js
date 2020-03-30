@@ -1,13 +1,31 @@
 import React, {Component} from 'react';
 import HomePage from "./components/homapage";
+import {BrowserRouter, Route, Link} from "react-router-dom";
 import './App.css';
 import LoginForm from "./components/form";
+// import {Cookies} from 'react-cookie';
+// import {instanceOf} from "prop-types";
 
 class App extends Component {
+    // static propTypes = {
+    //     cookies: instanceOf(Cookies).isRequired
+    // };
+
     state = {
         data: null,
         logged: false
     };
+    // static propTypes = {
+    //     cookies: instanceOf(Cookies).isRequired
+    // };
+    // componentWillMount() {
+    //     const { cookies } = this.props;
+    //     this.state = {
+    //         data: null,
+    //         logged: false,
+    //         token: {cookies}.get('token')
+    //     };
+    // }
 
     componentDidMount() {
         // Call our fetch function below once the component mounts
@@ -28,14 +46,21 @@ class App extends Component {
     };
 
     render() {
-      console.log(this.state);
+        console.log(this.state);
         return (
-            <div className="App">
-               <LoginForm/>
-                <p className="App-intro">{this.state.data}</p>
-              <p>{this.state.logged}</p>
-                <HomePage/>
-            </div>
+            <BrowserRouter>
+                <div className="App">
+                    <ul>
+                        <li><Link to='/login'> Login </Link></li>
+                        <li><Link to="/"> HomePage</Link></li>
+                    </ul>
+                    {/*<LoginForm/>*/}
+                    {/*  <p className="App-intro">{this.state.data}</p>*/}
+                    {/*<p>{this.state.logged}</p>*/}
+                    <Route exact path="/login" component={LoginForm}/>
+                    <Route path="/" component={HomePage}/>
+                </div>
+            </BrowserRouter>
         );
     }
 }

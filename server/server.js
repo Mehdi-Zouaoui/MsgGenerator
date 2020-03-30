@@ -25,7 +25,7 @@ app.get('/express_backend', (req, res) => {
 });
 app.post('/express_backend', (req, res) => {
 });
-app.get('login' , function(req,res){
+app.get('/login' , function(req,res){
     res.json({express: 'YOUR EXPRESS BACKEND IS CONNECTED TO REACT'});
 });
 app.post('/login', function (req, res) {
