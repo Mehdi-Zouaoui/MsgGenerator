@@ -3,6 +3,8 @@ import HomePage from "./components/homapage";
 import {BrowserRouter, Route, Link} from "react-router-dom";
 import './App.css';
 import LoginForm from "./components/form";
+import Header from "./components/header";
+
 // import {Cookies} from 'react-cookie';
 // import {instanceOf} from "prop-types";
 
@@ -15,24 +17,27 @@ class App extends Component {
         data: null,
         logged: false
     };
-    // static propTypes = {
-    //     cookies: instanceOf(Cookies).isRequired
-    // };
-    // componentWillMount() {
-    //     const { cookies } = this.props;
-    //     this.state = {
-    //         data: null,
-    //         logged: false,
-    //         token: {cookies}.get('token')
-    //     };
-    // }
+
+    componentWillMount() {
+
+        this.state = {
+            data: null,
+            logged: false,
+            // token: {cookies}.get('token')
+        };
+    }
 
     componentDidMount() {
+        const state = localStorage.getItem('state');
+        if(state) {
+            this.setState(JSON.parse(state))
+        }
         // Call our fetch function below once the component mounts
         this.callBackendAPI()
             .then(res => this.setState({data: res.express, logged: res.logged}))
             .catch(err => console.log(err));
     }
+
 
     // Fetches our GET route from the Express server. (Note the route we are fetching matches the GET route from server.js
     callBackendAPI = async () => {
@@ -46,21 +51,22 @@ class App extends Component {
     };
 
     render() {
-        console.log(this.state);
+
         return (
-            <BrowserRouter>
-                <div className="App">
-                    <ul>
-                        <li><Link to='/login'> Login </Link></li>
-                        <li><Link to="/"> HomePage</Link></li>
-                    </ul>
-                    {/*<LoginForm/>*/}
-                    {/*  <p className="App-intro">{this.state.data}</p>*/}
-                    {/*<p>{this.state.logged}</p>*/}
-                    <Route exact path="/login" component={LoginForm}/>
-                    <Route path="/" component={HomePage}/>
+
+                <div className="App container-fluid justify-content-center" style={{paddingLeft: 0, paddingRight: 0}}>
+                    {/*<ul>*/}
+                    {/*    <li><Link to='/login'> Login </Link></li>*/}
+                    {/*    <li><Link to="/"> HomePage</Link></li>*/}
+                    {/*</ul>*/}
+                    <Header/>
+                    <HomePage/>
+                    <LoginForm/>
+                    <p>{this.state.logged}</p>
+                    {/*<Route exact path="/login" component={LoginForm}/>*/}
+                    {/*<Route path="/" component={HomePage}/>*/}
                 </div>
-            </BrowserRouter>
+
         );
     }
 }

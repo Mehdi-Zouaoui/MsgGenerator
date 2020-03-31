@@ -21,7 +21,7 @@ class HomePage extends React.Component {
     render() {
         return (
             <div>
-                <h2> HomePage</h2>
+                <h1 className="my-5">Cliclic Message Generator</h1>
                 {/*<button onClick={this.doYouHaveCookie()}> Cookie</button>*/}
             </div>
 

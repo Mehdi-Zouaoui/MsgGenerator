@@ -32,8 +32,8 @@ app.post('/login', function (req, res) {
     console.log('password', req.body.password);
     if (password === req.body.password) {
         res.cookie('token', token, {maxAge: 900000, httpOnly: true});
-        res.json({logged: true});
+        res.status(200).json({logged: true});
         console.log('WELCOME TO MESSAGE GENERATOR');
-    } else res.send('YOUR PASSWORD IS NOT DEFINED');
+    } else res.status(500).send({ error : 'YOUR PASSWORD IS NOT DEFINED'});
 
 });
