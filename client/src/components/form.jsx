@@ -4,21 +4,17 @@ import axios from 'axios'
 class LoginForm extends React.Component {
     //props : paramètre du composant définit depuis l'extérieur ( state parent par exemple ) pas possible dde modifigfier les props depuis l'interieur du compasant
     constructor(props) {
-
         super(props);
         //State état INTERNE au composant ( Que les propriétées qui servent au composant) possible de modifier depuis le composant
         // Chaque fois que les props ou les states se modifient réexecuter la fonction render() du composant.
         this.state = {
             password: ''
         };
-
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         console.log(this.props);
     }
-    isLogged (){
-        this.props.setLogged();
-    }
+
     // changeParentState(){
     //
     // }
@@ -34,7 +30,7 @@ class LoginForm extends React.Component {
             .then(res => {
                 console.log('Res here', res);
                 // this.state.logged = res.data.logged;  il est interdit dans react de modifier le state de cette manière. Il faut obligatoirement utiliser setState()
-               this.isLogged();
+                this.props.setLogged();
                 console.log('local', localStorage);
             })
             .catch(error => {
@@ -44,7 +40,7 @@ class LoginForm extends React.Component {
 
 
     render() {
-
+        // console.log(localStorage.getItem('state').JSON.parse(state));
         return (
             <div className="justify-content-center align-items-center d-flex flex-column">
                 <form method="post" onSubmit={this.handleSubmit} className="mt-5 py-3 card col-4">
@@ -57,8 +53,7 @@ class LoginForm extends React.Component {
                     <input className="btn btn-primary" type="submit" value="Envoyer"/>
                     <p>{this.state.password}</p>
                 </form>
-                {this.state.logged ? <p className="mt-5"> You're Logged </p> : <p className="mt-5">Wrong password</p>}
-
+                {JSON.parse(this.props.storedState).isLogged ? <p className="mt-5"> You're Logged </p> : <p className="mt-5">Wrong password</p>}
             </div>
         );
     }
