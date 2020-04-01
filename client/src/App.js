@@ -18,15 +18,6 @@ class App extends Component {
         logged: false
     };
 
-    componentWillMount() {
-
-        this.state = {
-            data: null,
-            logged: false,
-            // token: {cookies}.get('token')
-        };
-    }
-
     componentDidMount() {
         const state = localStorage.getItem('state');
         if(state) {
@@ -36,6 +27,7 @@ class App extends Component {
         this.callBackendAPI()
             .then(res => this.setState({data: res.express, logged: res.logged}))
             .catch(err => console.log(err));
+        console.log(this.state)
     }
 
 
@@ -62,7 +54,7 @@ class App extends Component {
                     <Header/>
                     <HomePage/>
                     <LoginForm/>
-                    <p>{this.state.logged}</p>
+
                     {/*<Route exact path="/login" component={LoginForm}/>*/}
                     {/*<Route path="/" component={HomePage}/>*/}
                 </div>
