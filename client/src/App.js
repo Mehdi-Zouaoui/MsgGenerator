@@ -21,10 +21,17 @@ class App extends Component {
     // };
 
     state = {
-        data: null,
         logged: false
     };
 
+    setLogged(){
+        // Gerer le local Storage*
+
+        this.setState({logged : true});
+        localStorage.setItem('state', JSON.stringify(this.state));
+        console.log(this.state)
+
+    }
     componentDidMount() {
         const state = localStorage.getItem('state');
         if(state) {
@@ -32,24 +39,12 @@ class App extends Component {
         }
         // Call our fetch function below once the component mounts
         // à quoi ça sert ?
-        this.callBackendAPI()
-            .then(res => this.setState({data: res.express, logged: res.logged}))
-            .catch(err => console.log(err));
-        console.log(this.state)
     }
 
 
     // Fetches our GET route from the Express server. (Note the route we are fetching matches the GET route from server.js
     // à quoi ça sert ?
-    callBackendAPI = async () => {
-        const response = await fetch('/express_backend');
-        const body = await response.json();
 
-        if (response.status !== 200) {
-            throw Error(body.message)
-        }
-        return body;
-    };
 
     render() {
 
@@ -62,7 +57,7 @@ class App extends Component {
                     {/*</ul>*/}
                     <Header/>
                     <HomePage/>
-                    <LoginForm/>
+                    <LoginForm  isLogged = {this.setLogged()}/>
 
                     {/*<Route exact path="/login" component={LoginForm}/>*/}
                     {/*<Route path="/" component={HomePage}/>*/}

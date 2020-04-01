@@ -2,17 +2,26 @@ import React from "react";
 import axios from 'axios'
 
 class LoginForm extends React.Component {
+    //props : paramètre du composant définit depuis l'extérieur ( state parent par exemple ) pas possible dde modifigfier les props depuis l'interieur du compasant
     constructor(props) {
+
         super(props);
+        //State état INTERNE au composant ( Que les propriétées qui servent au composant) possible de modifier depuis le composant
+        // Chaque fois que les props ou les states se modifient réexecuter la fonction render() du composant.
         this.state = {
-            password: '',
-            logged: false
+            password: ''
         };
+
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         console.log(this.props);
     }
-
+    isLogged (){
+        this.props.setLogged();
+    }
+    // changeParentState(){
+    //
+    // }
     handleChange(event) {
         this.setState({password: event.target.value});
     }
@@ -21,13 +30,11 @@ class LoginForm extends React.Component {
 
         console.log('Le mot de passe a été soumis : ' + this.state.password);
         event.preventDefault();
-        // this.props.history.push('/homepage');
         axios.post('/login', this.state)
             .then(res => {
                 console.log('Res here', res);
-                this.state.logged = res.data.logged; // il est interdit dans react de modifier le state de cette manière. Il faut obligatoirement utiliser setState()
-                console.log(this.state);
-                localStorage.setItem('state', JSON.stringify(res));
+                // this.state.logged = res.data.logged;  il est interdit dans react de modifier le state de cette manière. Il faut obligatoirement utiliser setState()
+               this.isLogged();
                 console.log('local', localStorage);
             })
             .catch(error => {
@@ -37,7 +44,7 @@ class LoginForm extends React.Component {
 
 
     render() {
-        // console.log(this.state.logged);
+
         return (
             <div className="justify-content-center align-items-center d-flex flex-column">
                 <form method="post" onSubmit={this.handleSubmit} className="mt-5 py-3 card col-4">
