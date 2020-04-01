@@ -1,8 +1,15 @@
 import React, {Component} from 'react';
+
+// les noms de fichiers doivent avoir le nom du composant sinon on ne s'y retourve plus. Donc renommes ton fichier en HomePage.jsx stp
 import HomePage from "./components/homapage";
 import {BrowserRouter, Route, Link} from "react-router-dom";
 import './App.css';
-import LoginForm from "./components/form";
+
+// les noms de fichiers doivent avoir le nom du composant sinon on ne s'y retourve plus. Donc renommes ton fichier en LoginForm.jsx stp
+import LoginForm from "./components/form"; 
+
+
+
 import Header from "./components/header";
 
 // import {Cookies} from 'react-cookie';
@@ -24,6 +31,7 @@ class App extends Component {
             this.setState(JSON.parse(state))
         }
         // Call our fetch function below once the component mounts
+        // à quoi ça sert ?
         this.callBackendAPI()
             .then(res => this.setState({data: res.express, logged: res.logged}))
             .catch(err => console.log(err));
@@ -32,6 +40,7 @@ class App extends Component {
 
 
     // Fetches our GET route from the Express server. (Note the route we are fetching matches the GET route from server.js
+    // à quoi ça sert ?
     callBackendAPI = async () => {
         const response = await fetch('/express_backend');
         const body = await response.json();

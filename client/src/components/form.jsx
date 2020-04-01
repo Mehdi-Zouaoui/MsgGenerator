@@ -25,7 +25,7 @@ class LoginForm extends React.Component {
         axios.post('/login', this.state)
             .then(res => {
                 console.log('Res here', res);
-                this.state.logged = res.data.logged;
+                this.state.logged = res.data.logged; // il est interdit dans react de modifier le state de cette manière. Il faut obligatoirement utiliser setState()
                 console.log(this.state);
                 localStorage.setItem('state', JSON.stringify(res));
                 console.log('local', localStorage);
