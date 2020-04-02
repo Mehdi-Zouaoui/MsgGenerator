@@ -10,7 +10,7 @@ class App extends React.Component {
         this.state = {
             isLogged: false
         };
-        this.storedState = localStorage.getItem('state');
+
         this.setLogged = this.setLogged.bind(this);
         this.signOut = this.signOut.bind(this);
     }
@@ -27,9 +27,13 @@ class App extends React.Component {
         });
 
     }
+
     componentDidMount() {
-        const state = JSON.parse(this.storedState).isLogged;
-        console.log(state);
+        const state = localStorage.getItem('state');
+        const isLogged = JSON.parse(state).isLogged;
+        if (state) {
+            this.setState({isLogged: isLogged})
+        }
     }
 
     render() {
