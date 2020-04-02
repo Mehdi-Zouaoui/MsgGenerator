@@ -28,9 +28,10 @@ class App extends React.Component {
 
     }
 
+    // ça tu peux le mettre dans le constructor au moment ou tu fais this.state = {...}. tu peux dégager tout le componentDidMount
     componentDidMount() {
         const state = localStorage.getItem('state');
-        const isLogged = JSON.parse(state).isLogged;
+        const isLogged = JSON.parse(state).isLogged; 
         if (state) {
             this.setState({isLogged: isLogged})
         }
