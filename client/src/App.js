@@ -7,8 +7,13 @@ import Header from "./components/Header";
 class App extends React.Component {
     constructor(props) {
         super(props);
+
+        const stateRef = localStorage.getItem('state');
+        if (stateRef) {
+            this.currentState = JSON.parse(stateRef).isLogged;
+        }
         this.state = {
-            isLogged: false
+            isLogged: stateRef ? this.currentState : false
         };
 
         this.setLogged = this.setLogged.bind(this);
@@ -29,11 +34,7 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        const state = localStorage.getItem('state');
-        const isLogged = JSON.parse(state).isLogged;
-        if (state) {
-            this.setState({isLogged: isLogged})
-        }
+
     }
 
     render() {

@@ -1,0 +1,29 @@
+{
+  authentication: {
+    password: String,
+    token: String
+  },
+  generators: [
+    {
+      id: Any,
+      name: String,
+      link: String,
+      createdAt: Date,
+      socialNetwork: String,intervalle
+      config: {
+        keywords: [],
+        range: Number,
+        model: [],
+        speed: Number,
+        users : {
+          number : Number,
+          commentRange : Number
+        }
+      }
+    }
+  ],
+  lastName: [],
+  firstName: [],
+  avatars : []
+}
+
