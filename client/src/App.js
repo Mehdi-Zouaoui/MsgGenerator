@@ -1,8 +1,9 @@
 import React from 'react';
-import HomePage from "./components/HomePage";
-import './App.css';
+import HomePage from "./components/Generator";
+import './app.css';
 import LoginForm from "./components/LoginForm";
 import Header from "./components/Header";
+import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
 
 class App extends React.Component {
     constructor(props) {
@@ -36,11 +37,17 @@ class App extends React.Component {
     render() {
 
         return (
-            <div className="App container-fluid justify-content-center" style={{paddingLeft: 0, paddingRight: 0}}>
-                <Header signOut={this.signOut}/>
-                <HomePage/>
-                <LoginForm setLogged={this.setLogged} isLogged={this.state.isLogged}/>
-            </div>
+            <Router>
+                <div className="App container-fluid justify-content-center" style={{paddingLeft: 0, paddingRight: 0}}>
+                    <Header signOut={this.signOut}/>
+                    <Switch>
+                        {/*<Route path="/" exact component={HomePage}/>*/}
+                        <Route path="/generator" component={HomePage}/>
+                        <Route path="/login" component={LoginForm} setLogged={this.setLogged}
+                               isLogged={this.state.isLogged}/>
+                    </Switch>
+                </div>
+            </Router>
         );
     }
 }

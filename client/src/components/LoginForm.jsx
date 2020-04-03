@@ -33,7 +33,7 @@ class LoginForm extends React.Component {
     render() {
         return (
             <div className="justify-content-center align-items-center d-flex flex-column">
-                <form method="post" onSubmit={this.handleSubmit} className="mt-5 py-3 card col-4">
+                <form method="post" onSubmit={this.handleSubmit} className="mt-5 py-3 card col-4 ">
                     <h3 className="mb-4">Login</h3>
                     <div className="form-group">
                         <label htmlFor="passwordInput">Password </label>

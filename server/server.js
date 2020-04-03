@@ -26,12 +26,12 @@ app.post('/login', function (req, res) {
 app.get('/generators', function (req, res) {
 
 });
-app.get('/generators/:id', function (req, res) {
+app.get('/generator/:id', function (req, res) {
 
 });
 app.put('/generator', function (req, res) {
-
+    console.log('password', req.body.password);
 });
-app.delete('/generators:id', function (req, res) {
+app.delete('/generator/:id', function (req, res) {
 
 });
