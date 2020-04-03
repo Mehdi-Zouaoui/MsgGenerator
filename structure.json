@@ -9,7 +9,8 @@
       name: String,
       link: String,
       createdAt: Date,
-      socialNetwork: String,intervalle
+      socialNetwork: String,
+      intervalle
       config: {
         keywords: [],
         range: Number,
