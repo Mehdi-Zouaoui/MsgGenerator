@@ -29,8 +29,12 @@ app.get('/generators', function (req, res) {
 app.get('/generator/:id', function (req, res) {
 
 });
-app.put('/generator', function (req, res) {
-    console.log('password', req.body.password);
+//put
+app.post('/generator', function (req, res) {
+    console.log("HEY HELLO");
+    console.log('name', req.body.name);
+    // Use body middleware to get axios request from front
+
 });
 app.delete('/generator/:id', function (req, res) {
 
