@@ -32,7 +32,7 @@ app.get('/generator/:id', function (req, res) {
 //put
 app.post('/generator', function (req, res) {
     console.log("HEY HELLO");
-    console.log('name', req.body.name);
+    console.log('Data' , req.body)
     // Use body middleware to get axios request from front
 
 });
