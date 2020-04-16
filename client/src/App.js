@@ -4,6 +4,7 @@ import './app.css';
 import LoginForm from "./components/LoginForm";
 import Header from "./components/Header";
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
+import Generators from "./components/Generators";
 
 class App extends React.Component {
     constructor(props) {
@@ -41,7 +42,7 @@ class App extends React.Component {
                 <div className="App container-fluid justify-content-center" style={{paddingLeft: 0, paddingRight: 0}}>
                     <Header signOut={this.signOut}/>
                     <Switch>
-                        {/*<Route path="/" exact component={HomePage}/>*/}
+                        <Route path="/" exact component={Generators}/>
                         <Route path="/generator" component={HomePage}/>
                         <Route path="/login" component={LoginForm} setLogged={this.setLogged}
                                isLogged={this.state.isLogged}/>

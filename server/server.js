@@ -4,6 +4,9 @@ const port = process.env.PORT || 5000;
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const password = "CliclicTV";
+const mongo = require('mongodb').MongoClient;
+const mongoose = require('mongoose');
+const url = 'mongodb://localhost:27017/messageGenerator';
 const token = "zkjndpzkjn";
 app.use(cookieParser());
 app.use(bodyParser());
@@ -12,6 +15,7 @@ app.use(bodyParser());
 //     console.log('cookie created successfully', req.cookies);
 //     next();
 // });
+
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
@@ -25,14 +29,65 @@ app.post('/login', function (req, res) {
 });
 app.get('/generators', function (req, res) {
 
+    mongo.connect(url, function (error, client) {
+        if (error) console.log(error);
+        console.log('Connecté à la base de données');
+        const db = client.db('generators');
+        const collection = db.collection('generators');
+        res.send('hello');
+
+        collection.find({}).toArray(function (error, result) {
+            if (error) {
+                res.send(error)
+            } else if (res.length) {
+                res.render('Generators', {
+                    'generators': res
+                });
+            } else {
+                // res.send('No documents found');
+            }
+        });
+    });
+
+
 });
+
 app.get('/generator/:id', function (req, res) {
 
 });
 //put
 app.post('/generator', function (req, res) {
+
     console.log("HEY HELLO");
-    console.log('Data' , req.body)
+    console.log('Data', req.body);
+    let generator = {
+        name: req.body.name,
+        speed: req.body.speed,
+        keywords: req.body.keywords,
+        minNumber: req.body.minNumber,
+        maxNumber: req.body.maxNumber,
+        generatorModel: req.body.generatorModel
+    };
+
+    mongo.connect(url, function (error, client) {
+
+        const db = client.db('messageGenerator');
+        if (error) {
+            console.log('Unable to connect to server', error)
+        } else {
+            console.log('Connected to server');
+        }
+
+        db.collection('generators').insertOne(generator, function (error, result) {
+            if (error) {
+                console.log(error)
+            } else {
+                console.log('Done', generator);
+            }
+        });
+
+
+    })
     // Use body middleware to get axios request from front
 
 });

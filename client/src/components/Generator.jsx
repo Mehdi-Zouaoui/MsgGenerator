@@ -99,7 +99,8 @@ class Generator extends React.Component {
             twitterChecked: false,
             speed: 0,
             keywords: '',
-            interval: '',
+            minNumber: 0,
+            maxNumber: 0,
             generatorModel: ''
         };
 
@@ -109,6 +110,8 @@ class Generator extends React.Component {
         this.changeKeywords = this.changeKeywords.bind(this);
         this.changeSpeed = this.changeSpeed.bind(this);
         this.changeModel = this.changeModel.bind(this);
+        this.onMinChange = this.onMinChange.bind(this);
+        this.onMaxChange = this.onMaxChange.bind(this);
         // this.handleChecked = this.handleChecked.bind(this);
     }
 
@@ -122,28 +125,45 @@ class Generator extends React.Component {
     //             name: value,
     //     })
     // }
-    changeName(event){
+    changeName(event) {
         const value = event.target.value;
         this.setState({
-            name : value
+            name: value
         })
     }
-    changeKeywords(event){
+
+    changeKeywords(event) {
         const value = event.target.value;
         this.setState({
-            keywords : value
+            keywords: value
         })
     }
-    changeSpeed(event){
+
+    changeSpeed(event) {
         const value = event.target.value;
         this.setState({
-            speed : value
+            speed: value
         })
     }
-    changeModel(event){
+
+    changeModel(event) {
         const value = event.target.value;
         this.setState({
-            generatorModel : value
+            generatorModel: value
+        })
+    }
+
+    onMinChange(event) {
+        const value = event.target.value;
+        this.setState({
+            minNumber: value
+        })
+    }
+
+    onMaxChange(event) {
+        const value = event.target.value;
+        this.setState({
+            maxNumber: value
         })
     }
 
@@ -240,14 +260,17 @@ class Generator extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <div className='mt-5'>Vitesses des commentaire <input type="number" value ={this.state.speed} onChange={this.changeSpeed}/>com/min</div>
+                    <div className='mt-5'>Vitesses des commentaire <input type="number" value={this.state.speed}
+                                                                          onChange={this.changeSpeed}/>com/min
+                    </div>
                     <div className="col-12">
                         <h2>Options</h2>
                         <div className="d-flex justify-content-around">
                             <div className="card">
                                 <div className="card-body form-group">
                                     <div className="card-header">KeyWords</div>
-                                    <textarea className="form-control" id="exampleFormControlTextarea1" value={this.state.keywords} onChange={this.changeKeywords}  rows="3"/>
+                                    <textarea className="form-control" id="exampleFormControlTextarea1"
+                                              value={this.state.keywords} onChange={this.changeKeywords} rows="3"/>
                                 </div>
                             </div>
 
@@ -255,7 +278,11 @@ class Generator extends React.Component {
                                 <div className="card-body">
                                     <div className="form-group">
                                         <div className="card-title">Nombre compris entre</div>
-                                        <div><input type="number"/> et <input type="number"/></div>
+                                        <div><input type="number" value={this.state.minNumber}
+                                                    onChange={this.onMinChange}/> et <input type="number"
+                                                                                            value={this.state.maxNumber}
+                                                                                            onChange={this.onMaxChange}/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -263,7 +290,8 @@ class Generator extends React.Component {
                             <div className="card">
                                 <div className="card-body form-group">
                                     <div className="card-header">Modèle de commentaires</div>
-                                    <textarea className="form-control" id="exampleFormControlTextarea1" value={this.state.generatorModel} onChange={this.changeModel}  rows="3"/>
+                                    <textarea className="form-control" id="exampleFormControlTextarea1"
+                                              value={this.state.generatorModel} onChange={this.changeModel} rows="3"/>
                                 </div>
                             </div>
                         </div>
