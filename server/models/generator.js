@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const mongo = require('mongodb').MongoClient;
+const url = 'mongodb://localhost:27017/messageGenerator';
 
 const generatorSchema = new mongoose.Schema(
     {
@@ -29,8 +31,14 @@ function createGenerator() {
 
 }
 
-function deleteGenerator() {
-
+function deleteGenerator(id) {
+    mongo.connect(url, function (error, client) {
+        if (error) console.log(error);
+        console.log('Connecté à la base de données');
+        const db = client.db('messageGenerator');
+        const collection = db.collection('generators');
+        collection.deleteOne({'_id': id});
+    })
 }
 
 

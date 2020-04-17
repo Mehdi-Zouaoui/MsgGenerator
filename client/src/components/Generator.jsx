@@ -97,6 +97,7 @@ class Generator extends React.Component {
             instagramChecked: false,
             twitchChecked: false,
             twitterChecked: false,
+            socialNetworks: [],
             speed: 0,
             keywords: '',
             minNumber: 0,
@@ -192,11 +193,18 @@ class Generator extends React.Component {
     // }
 
     handleSubmit(event) {
+
         let stateClone = lodash.cloneDeep(this.state);
         console.log('Clone ici ', stateClone);
         let keywords = this.state.keywords.split('\n');
         console.log(keywords);
         stateClone.keywords = keywords;
+        if (stateClone.facebookChecked) stateClone.socialNetworks.push('facebook');
+        if (stateClone.youtubeChecked) stateClone.socialNetworks.push('youtube');
+        if (stateClone.instagramChecked) stateClone.socialNetworks.push('instagram');
+        if (stateClone.twitchChecked) stateClone.socialNetworks.push('twitch');
+        if (stateClone.twitterChecked) stateClone.socialNetworks.push('twitter');
+
         event.preventDefault();
         axios.post('/generator', stateClone).then(
             res => {
