@@ -1,5 +1,5 @@
 import React from 'react';
-import HomePage from "./components/Generator";
+import HomePage from "./components/GeneratorForm";
 import './app.css';
 import LoginForm from "./components/LoginForm";
 import Header from "./components/Header";

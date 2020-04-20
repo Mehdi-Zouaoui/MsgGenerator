@@ -86,7 +86,7 @@ const formStyle = {
 //     )
 // }
 
-class Generator extends React.Component {
+class GeneratorForm extends React.Component {
 
     constructor(props) {
         super(props);
@@ -312,4 +312,4 @@ class Generator extends React.Component {
     }
 }
 
-export default Generator
+export default GeneratorForm

@@ -17,7 +17,7 @@ class Header extends React.Component {
                 <a className="navbar-brand" href="#">
                     <img src={logo} alt="logo" style={{width: 30, height: 30}}/>
                 </a>
-                <ul className="nav-links col-10 d-flex justify-content-around">
+                <ul className="nav-links col-10 d-flex justify-content-around mb-0">
                     <Link to="/login">
                         <li className="navbar-brand">Login</li>
                     </Link>
