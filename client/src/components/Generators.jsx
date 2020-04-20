@@ -1,4 +1,5 @@
 import React from 'react';
+const database = require('../../../server/database');
 
 const lodash = require('lodash');
 
@@ -33,7 +34,7 @@ class Generators extends React.Component {
                     <div className="col-6 d-flex justify-content-center align-items-center">{generator.keywords.join('\n')}</div>
                     <div className="col-1">Interval : {generator.minNumber} - {generator.maxNumber}</div>
                     <div className="col-1"> Modèle : {generator.generatorModel}</div>
-                    <button className="btn btn-danger col-1">Delete</button>
+                    <button className="btn btn-danger col-1" onClick={database.deleteOne(generator._id)}>Delete</button>
                     </div>
                 </li>
             );

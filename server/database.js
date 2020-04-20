@@ -13,23 +13,16 @@ function connect() {
     })
 }
 
-async function getData() {
-
-    collection.find({}).toArray(function (error, result) {
-        console.log('res', result);
-        if (error) {
-            return error;
-        } else if (result.length) {
-            return result;
-        } else {
-            return 'No document found';
-        }
-    });
+function getData() {
+    return collection.find({}).toArray().then((item) => {
+            if(item.length) return(item);
+            else return('error');
+    })
 }
 
 function insertOne(item) {
 
-    db.collection('generators').insertOne(item, function (error, result) {
+    db.collection('generators').insertOne(item, function (error) {
         if (error) {
             console.log(error)
         } else {
@@ -37,10 +30,14 @@ function insertOne(item) {
         }
     });
 }
+function deleteOne(id){
+    collection.deleteOne({'_id': id});
+}
 
 module.exports = {
     connect,
     insertOne,
-    getData
+    getData,
+    deleteOne
 
 };

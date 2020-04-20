@@ -42,7 +42,7 @@ class App extends React.Component {
                 <div className="App container-fluid justify-content-center" style={{paddingLeft: 0, paddingRight: 0}}>
                     <Header signOut={this.signOut}/>
                     <Switch>
-                        <Route path="/" exact component={Generators}/>
+                        <Route path="/generators" exact component={Generators}/>
                         <Route path="/generator" component={HomePage}/>
                         <Route path="/login" component={LoginForm} setLogged={this.setLogged}
                                isLogged={this.state.isLogged}/>
