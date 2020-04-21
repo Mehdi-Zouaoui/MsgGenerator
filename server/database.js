@@ -5,39 +5,28 @@ let db = null;
 let collection = null;
 
 function connect() {
-    mongo.connect(url, function (error, client) {
-        if (error) console.log(error);
+    return mongo.connect(url).then((client) => {
         console.log('Connecté à la base de données');
-        db = client.db('messageGenerator');
-        collection = db.collection('generators');
+        return {
+            db: client.db('messageGenerator'),
+            collection: client.db('messageGenerator').collection('generators')
+        }
     })
-}
 
-function getData() {
-    return collection.find({}).toArray().then((item) => {
-            if(item.length) return(item);
-            else return('error');
-    })
 }
 
 function insertOne(item) {
 
-    db.collection('generators').insertOne(item, function (error) {
-        if (error) {
-            console.log(error)
-        } else {
-            console.log('Done', item);
-        }
-    });
+
 }
-function deleteOne(id){
+
+function deleteOne(id) {
     collection.deleteOne({'_id': id});
 }
 
 module.exports = {
     connect,
     insertOne,
-    getData,
     deleteOne
 
 };

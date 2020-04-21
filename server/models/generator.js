@@ -19,10 +19,22 @@ const generatorSchema = new mongoose.Schema(
     }
 );
 
-function getGenerators() {
-
+function getGenerators(collection) {
+    return collection.find({}).toArray().then((item) => {
+        if(item.length) return(item);
+        else return('error');
+    })
 }
 
+function createGenerator(collection , item){
+   collection.insertOne(item, function (error) {
+        if (error) {
+            console.log(error)
+        } else {
+            console.log('Done', item);
+        }
+    });
+}
 function getGenerator() {
 
 }
@@ -32,13 +44,11 @@ function createGenerator() {
 }
 
 function deleteGenerator(id) {
-    mongo.connect(url, function (error, client) {
-        if (error) console.log(error);
-        console.log('Connecté à la base de données');
-        const db = client.db('messageGenerator');
-        const collection = db.collection('generators');
         collection.deleteOne({'_id': id});
-    })
 }
 
+module.exports = {
+    getGenerators,
+    deleteGenerator
+};
 

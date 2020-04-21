@@ -3,12 +3,23 @@ const app = express();
 const port = process.env.PORT || 5000;
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const events = require('events');
+const eventEmitter = new events.EventEmitter();
 const password = "CliclicTV";
 const database = require('./database');
+let db = null ;
+let collection = null;
+const generator = require('./models/generator');
 const token = "zkjndpzkjn";
 app.use(cookieParser());
 app.use(bodyParser());
-database.connect();
+
+database.connect().then((client) => {
+     db = client.db;
+     collection = client.collection;
+});
+
+console.log(collection);
 // app.use(function (req, res, next) {
 //     res.cookie('token', token ,{maxAge: 900000, httpOnly: true});
 //     console.log('cookie created successfully', req.cookies);
@@ -28,14 +39,23 @@ app.post('/login', function (req, res) {
 });
 
 app.get('/generators', function (req, res) {
-    database.getData().then((value) => {
+    // console.log('collection' , collection);
+    generator.getGenerators(collection).then((value) => {
         console.log('data' , value);
         res.json({'generators': value});
     });
 });
+app.delete('/generators',function (req,res) {
+    console.log(req);
+    console.log('delete method');
 
-app.get('/generator/:id', function (req, res) {
+    // generator.deleteGenerator()
+});
 
+app.get('/generators/:id', function (req, res) {
+
+    console.log(req.params.id);
+    // generator.deleteGenerator(req.params.id);
 });
 //put
 app.post('/generator', function (req, res) {
@@ -52,26 +72,6 @@ app.post('/generator', function (req, res) {
         generatorModel: req.body.generatorModel
     };
     database.insertOne(generator);
-    // mongo.connect(url, function (error, client) {
-    //
-    //     const db = client.db('messageGenerator');
-    //     if (error) {
-    //         console.log('Unable to connect to server', error)
-    //     } else {
-    //         console.log('Connected to server');
-    //     }
-    //
-    //     db.collection('generators').insertOne(generator, function (error, result) {
-    //         if (error) {
-    //             console.log(error)
-    //         } else {
-    //             console.log('Done', generator);
-    //         }
-    //     });
-    //
-    //
-    // })
-    // Use body middleware to get axios request from front
 
 });
 app.delete('/generator/:id', function (req, res) {
