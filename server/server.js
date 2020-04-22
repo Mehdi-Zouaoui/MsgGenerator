@@ -7,16 +7,16 @@ const events = require('events');
 const eventEmitter = new events.EventEmitter();
 const password = "CliclicTV";
 const database = require('./database');
-let db = null ;
+let db = null;
 let collection = null;
-const generator = require('./models/generator');
+const generator = require('./api/generator');
 const token = "zkjndpzkjn";
 app.use(cookieParser());
 app.use(bodyParser());
 
 database.connect().then((client) => {
-     db = client.db;
-     collection = client.collection;
+    db = client.db;
+    collection = client.collection;
 });
 
 console.log(collection);
@@ -40,22 +40,26 @@ app.post('/login', function (req, res) {
 
 app.get('/generators', function (req, res) {
     // console.log('collection' , collection);
+
     generator.getGenerators(collection).then((value) => {
-        console.log('data' , value);
         res.json({'generators': value});
     });
+    console.log('REQ', req);
 });
-app.delete('/generators',function (req,res) {
-    console.log(req);
-    console.log('delete method');
 
-    // generator.deleteGenerator()
-});
+// app.delete('/generators', function (req, res) {
+//
+//     console.log(req);
+//     console.log('I receive a delete request');
+//
+//
+//     // generator.deleteGenerator()
+// });
 
 app.get('/generators/:id', function (req, res) {
-
-    console.log(req.params.id);
-    // generator.deleteGenerator(req.params.id);
+    // console.log('I receive a delete request');
+    // console.log(req.params.id);
+    // // generator.deleteGenerator(req.params.id);
 });
 //put
 app.post('/generator', function (req, res) {

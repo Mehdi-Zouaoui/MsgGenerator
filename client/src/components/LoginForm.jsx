@@ -21,6 +21,7 @@ class LoginForm extends React.Component {
         event.preventDefault();
         axios.post('/login', this.state)
             .then(res => {
+                console.log(this.state);
                 console.log('Res here', res);
                 this.props.setLogged();
                 console.log('local', localStorage);
