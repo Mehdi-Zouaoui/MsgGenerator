@@ -3,8 +3,8 @@ const app = express();
 const port = process.env.PORT || 5000;
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const events = require('events');
-const eventEmitter = new events.EventEmitter();
+// const events = require('events');
+// // const eventEmitter = new events.EventEmitter();
 const password = "CliclicTV";
 const database = require('./database');
 let db = null;
@@ -20,11 +20,14 @@ database.connect().then((client) => {
 });
 
 console.log(collection);
-// app.use(function (req, res, next) {
-//     res.cookie('token', token ,{maxAge: 900000, httpOnly: true});
-//     console.log('cookie created successfully', req.cookies);
-//     next();
-// });
+
+let tokenCheck = function (req, res, next) {
+    if(req.cookies.token){
+        console.log('token middleware', req.cookies.token);
+        next();
+    } else res.redirect('/login');
+
+};
 
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
@@ -37,36 +40,41 @@ app.post('/login', function (req, res) {
         console.log('WELCOME TO MESSAGE GENERATOR');
     } else res.status(400).send({error: 'YOUR PASSWORD IS NOT DEFINED'}); // error 500 c'est pour les erreurs inattendues côté serveur. Pour un mauvais mot de passe on met plutot : 400 ou 401. Voici là liste des code : https://fr.wikipedia.org/wiki/Liste_des_codes_HTTP
 });
-
 app.get('/generators', function (req, res) {
     // console.log('collection' , collection);
-
     generator.getGenerators(collection).then((value) => {
         res.json({'generators': value});
     });
-    console.log('REQ', req);
 });
 
-// app.delete('/generators', function (req, res) {
-//
-//     console.log(req);
-//     console.log('I receive a delete request');
-//
-//
-//     // generator.deleteGenerator()
-// });
+app.delete('/generator/:id', tokenCheck ,function (req, res, err) {
 
-app.get('/generators/:id', function (req, res) {
-    // console.log('I receive a delete request');
-    // console.log(req.params.id);
-    // // generator.deleteGenerator(req.params.id);
+    console.log('I receive a delete request');
+    console.log(req.params.id);
+    if (!req.params.id) {
+        const error = new Error('missing id');
+        res.status(404);
+        res.json({
+            error: {
+                message: error
+            }
+        })
+    } else {
+        generator.deleteGenerator(collection, req.params.id).then((item) => {
+            console.log('item', item);
+        })
+            .catch((err) => {
+                console.error('something went wrong', err);
+            });
+    }
+
 });
-//put
-app.post('/generator', function (req, res) {
+
+app.put('/generator', function (req, res) {
 
     console.log("HEY HELLO");
     console.log('Data', req.body);
-    let generator = {
+    let newGenerator = {
         name: req.body.name,
         socialNetworks: req.body.socialNetworks,
         speed: req.body.speed,
@@ -75,9 +83,7 @@ app.post('/generator', function (req, res) {
         maxNumber: req.body.maxNumber,
         generatorModel: req.body.generatorModel
     };
-    database.insertOne(generator);
+    generator.createGenerator(collection, newGenerator);
 
 });
-app.delete('/generator/:id', function (req, res) {
 
-});

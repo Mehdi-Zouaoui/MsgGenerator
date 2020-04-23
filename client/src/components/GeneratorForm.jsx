@@ -206,7 +206,7 @@ class GeneratorForm extends React.Component {
         if (stateClone.twitterChecked) stateClone.socialNetworks.push('twitter');
 
         event.preventDefault();
-        axios.post('/generator', stateClone).then(
+        axios.put('/generator', stateClone).then(
             res => {
                 console.log('Generator res', res);
             }
@@ -220,7 +220,7 @@ class GeneratorForm extends React.Component {
             <div>
                 <h1 className="my-5">Cliclic Message Generator</h1>
                 {/*<button onClick={this.doYouHaveCookie()}> Cookie</button>*/}
-                <form style={formStyle} method="POST" onSubmit={this.handleSubmit} className="mt-5 py-3 card col-10 ">
+                <form style={formStyle} method="PUT" onSubmit={this.handleSubmit} className="mt-5 py-3 card col-10 ">
                     {/*<FormHeader*/}
                     {/*<Options/>*/}
                     {/*<Config/>*/}

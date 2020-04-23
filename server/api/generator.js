@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const mongo = require('mongodb').MongoClient;
+const mongo = require('mongodb');
 const url = 'mongodb://localhost:27017/messageGenerator';
 
 const generatorSchema = new mongoose.Schema(
@@ -27,28 +27,23 @@ function getGenerators(collection) {
 }
 
 function createGenerator(collection , item){
-   collection.insertOne(item, function (error) {
-        if (error) {
-            console.log(error)
-        } else {
-            console.log('Done', item);
-        }
-    });
+   collection.insertOne(item)
+       .then(res => console.log('Element as been pushed to database' , res))
+           .catch(err => console.error('failed to push to dabase' , err))
 }
 function getGenerator() {
 
 }
-
-function createGenerator() {
-
-}
-
-function deleteGenerator(id) {
-        collection.deleteOne({'_id': id});
+function deleteGenerator(collection , id) {
+        console.log('deleted');
+        collection.deleteOne({_id: new mongo.ObjectID(id)})
+            .then(res => console.log('Deleted' , res))
+            .catch(err => console.error('failed with error' , err));
 }
 
 module.exports = {
     getGenerators,
-    deleteGenerator
+    deleteGenerator,
+    createGenerator
 };
 
