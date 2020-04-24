@@ -23,11 +23,13 @@ class LoginForm extends React.Component {
             .then(res => {
                 console.log(this.state);
                 console.log('Res here', res);
-                this.props.setLogged();
+                // this.props.setLogged();
                 console.log('local', localStorage);
+                window.location = '/generators';
             })
             .catch(error => {
-                console.log(error)
+                console.log(error);
+                alert('Wrong password');
             })
     }
 

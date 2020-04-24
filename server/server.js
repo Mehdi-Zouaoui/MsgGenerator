@@ -7,25 +7,34 @@ const bodyParser = require('body-parser');
 // // const eventEmitter = new events.EventEmitter();
 const password = "CliclicTV";
 const database = require('./database');
+const timeout = require('connect-timeout');
 let db = null;
 let collection = null;
 const generator = require('./api/generator');
 const token = "zkjndpzkjn";
 app.use(cookieParser());
 app.use(bodyParser());
+app.use(timeout(100000));
+app.use(haltOnTimedout);
+
 
 database.connect().then((client) => {
     db = client.db;
     collection = client.collection;
 });
 
-console.log(collection);
+function haltOnTimedout(req, res, next){
+    if (!req.timedout) next();
+}
 
 let tokenCheck = function (req, res, next) {
     if(req.cookies.token){
         console.log('token middleware', req.cookies.token);
         next();
-    } else res.redirect('/login');
+    } else {
+        res.status(401);
+        next(new Error('Un-Authorized'));
+    }
 
 };
 
@@ -35,6 +44,7 @@ app.listen(port, () => console.log(`Listening on port ${port}`));
 app.post('/login', function (req, res) {
     console.log('password', req.body.password);
     if (password === req.body.password) {
+        console.log('req' , req.body.password);
         res.cookie('token', token, {maxAge: 900000, httpOnly: true});
         res.status(200).json({logged: true});
         console.log('WELCOME TO MESSAGE GENERATOR');
@@ -70,7 +80,7 @@ app.delete('/generator/:id', tokenCheck ,function (req, res, err) {
 
 });
 
-app.put('/generator', function (req, res) {
+app.put('/generator', tokenCheck , function (req, res) {
 
     console.log("HEY HELLO");
     console.log('Data', req.body);

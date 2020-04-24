@@ -27,7 +27,7 @@ class Generators extends React.Component {
         let clone = lodash.cloneDeep(this.state.generatorsArray);
 
         clone.splice(clone.findIndex(generator => generator._id === id), 1);
-        this.setState({updatedGeneratorsArray: clone, updated: true}, () => {
+        this.setState({generatorsArray: clone}, () => {
             console.log(this.state);
             console.log(id);
         });
@@ -36,8 +36,10 @@ class Generators extends React.Component {
             .then(res => {
                 console.log('RES GHERE', res)
             })
-            .catch(() => {
-                console.log('no data')
+            .catch(error => {
+                console.log('error' , error.response);
+                alert(`You're not authenticated`);
+                // window.location = '/login';
             });
 
     }
@@ -48,7 +50,7 @@ class Generators extends React.Component {
             <div className="text-center">
                 <h1 className='my-3'> Generators Liste</h1>
                 <Generator delete={this.deleteGenerator.bind(this)}
-                           array={this.state.updated ? this.state.updatedGeneratorsArray : this.state.generatorsArray}/>
+                           array={this.state.generatorsArray}/>
             </div>
         );
     }
@@ -59,6 +61,7 @@ class Generator extends React.Component {
 
     delete(id) {
         this.props.delete(id);
+        console.log(this.props)
     }
 
     render() {

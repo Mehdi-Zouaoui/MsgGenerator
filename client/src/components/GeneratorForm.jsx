@@ -209,8 +209,13 @@ class GeneratorForm extends React.Component {
         axios.put('/generator', stateClone).then(
             res => {
                 console.log('Generator res', res);
+                window.location = '/generators'
             }
-        )
+        ).catch(error => {
+            console.log(error);
+            alert(`You're not authenticated`);
+            window.location = '/login';
+        })
 
     }
 
