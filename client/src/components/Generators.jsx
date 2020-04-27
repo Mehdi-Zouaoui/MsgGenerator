@@ -25,22 +25,16 @@ class Generators extends React.Component {
 
     async deleteGenerator(id) {
         let clone = lodash.cloneDeep(this.state.generatorsArray);
-
         clone.splice(clone.findIndex(generator => generator._id === id), 1);
         this.setState({generatorsArray: clone}, () => {
             console.log(this.state);
             console.log(id);
         });
-        await axios.delete('/generator/' + id
-        )
-            .then(res => {
-                console.log('RES GHERE', res)
-            })
-            .catch(error => {
-                console.log('error' , error.response);
-                alert(`You're not authenticated`);
-                // window.location = '/login';
-            });
+        await axios.delete('/generator/' + id).catch((err) => {
+            alert(`you're not authenticated`);
+            window.location = '/login';
+        })
+
 
     }
 

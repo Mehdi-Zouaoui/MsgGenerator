@@ -23,12 +23,12 @@ database.connect().then((client) => {
     collection = client.collection;
 });
 
-function haltOnTimedout(req, res, next){
+function haltOnTimedout(req, res, next) {
     if (!req.timedout) next();
 }
 
 let tokenCheck = function (req, res, next) {
-    if(req.cookies.token){
+    if (req.cookies.token) {
         console.log('token middleware', req.cookies.token);
         next();
     } else {
@@ -44,7 +44,7 @@ app.listen(port, () => console.log(`Listening on port ${port}`));
 app.post('/login', function (req, res) {
     console.log('password', req.body.password);
     if (password === req.body.password) {
-        console.log('req' , req.body.password);
+        console.log('req', req.body.password);
         res.cookie('token', token, {maxAge: 900000, httpOnly: true});
         res.status(200).json({logged: true});
         console.log('WELCOME TO MESSAGE GENERATOR');
@@ -57,30 +57,34 @@ app.get('/generators', function (req, res) {
     });
 });
 
-app.delete('/generator/:id', tokenCheck ,function (req, res, err) {
+app.delete('/generator/:id', tokenCheck, function (req, res, err) {
 
     console.log('I receive a delete request');
     console.log(req.params.id);
-    if (!req.params.id) {
-        const error = new Error('missing id');
-        res.status(404);
-        res.json({
-            error: {
-                message: error
-            }
-        })
-    } else {
-        generator.deleteGenerator(collection, req.params.id).then((item) => {
-            console.log('item', item);
-        })
-            .catch((err) => {
-                console.error('something went wrong', err);
-            });
-    }
 
+    generator.deleteGenerator(collection, req.params.id).then((item) => {
+        console.log(item);
+    })
+        .catch((err) => {
+            if (!req.params.id) {
+                const error = new Error('missing id');
+                res.status(404).json({
+                    error: {
+                        message: error
+                    }
+                })
+            }else {
+                res.status(400).json({
+                    errorMessage : 'bad request'
+                })
+
+            }
+            console.error('something went wrong', err);
+        });
 });
 
-app.put('/generator', tokenCheck , function (req, res) {
+
+app.put('/generator', tokenCheck, function (req, res) {
 
     console.log("HEY HELLO");
     console.log('Data', req.body);
