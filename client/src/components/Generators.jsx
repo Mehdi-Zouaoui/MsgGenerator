@@ -1,23 +1,27 @@
 import React from 'react';
 import axios from 'axios'
-
+import Generator from './Generator'
 // const database = require('../../../server/database');
 
 const lodash = require('lodash');
 
 class Generators extends React.Component {
 
-
     constructor(props) {
         super(props);
         this.state = {
             generatorsArray: [],
             updatedGeneratorsArray: [],
+
             updated: false
         };
     }
 
-    async componentDidMount() {
+    componentDidMount() {
+        this.refresh().then(r => console.log(r));
+    }
+
+    async refresh() {
         const response = await fetch('/generators');
         const data = await response.json();
         return this.setState({generatorsArray: data.generators});
@@ -30,12 +34,22 @@ class Generators extends React.Component {
             console.log(this.state);
             console.log(id);
         });
-        await axios.delete('/generator/' + id).catch((err) => {
-            alert(`you're not authenticated`);
-            window.location = '/login';
-        })
+        await axios.delete('/generator/' + id)
+            .catch((err) => {
+                if (err.response.status === 404) {
+                    console.log('Missing Id', err);
+                    this.refresh();
+                } else if (err.response.status === 500) {
+                    alert('Internal Server Error')
+                }
+                // window.location = '/login';
+            })
 
 
+    }
+
+    update(id) {
+        window.location = '/login:id'
     }
 
     render() {
@@ -44,51 +58,12 @@ class Generators extends React.Component {
             <div className="text-center">
                 <h1 className='my-3'> Generators Liste</h1>
                 <Generator delete={this.deleteGenerator.bind(this)}
-                           array={this.state.generatorsArray}/>
+                           array={this.state.generatorsArray}
+                           update={this.update.bind(this)}/>
             </div>
         );
     }
 
 }
 
-class Generator extends React.Component {
-
-    delete(id) {
-        this.props.delete(id);
-        console.log(this.props)
-    }
-
-    render() {
-        return (
-            this.props.array.map(generator =>
-                <li className="card" key={generator._id}>
-                    <div className=" d-flex">
-                        <h2 className="card-header col-2">{generator.name} - {generator._id}</h2>
-                        <div className="col-1">{generator.socialNetworks.join('\n')}</div>
-                        <div
-                            className="col-6 d-flex justify-content-center align-items-center">{generator.keywords.join('\n')}</div>
-                        <div className="col-1">Interval : {generator.minNumber} - {generator.maxNumber}</div>
-                        <div className="col-1"> Modèle : {generator.generatorModel}</div>
-                        <button className="btn btn-danger col-1" onClick={() => this.delete(generator._id)}>Delete
-                        </button>
-                    </div>
-                </li>
-            )
-        );
-    }
-
-}
-
-// async function getData() {
-//     try {
-//         const response = await fetch('/generators');
-//         const data = await response.json();
-//         console.log(data);
-//         return data ;
-//     } catch (e) {
-//         return e;
-//     }
-//
-//
-// }
 export default Generators;

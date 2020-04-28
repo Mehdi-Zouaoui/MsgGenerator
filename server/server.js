@@ -32,7 +32,7 @@ let tokenCheck = function (req, res, next) {
         console.log('token middleware', req.cookies.token);
         next();
     } else {
-        res.status(401);
+        res.sendStatus(401);
         next(new Error('Un-Authorized'));
     }
 
@@ -46,14 +46,17 @@ app.post('/login', function (req, res) {
     if (password === req.body.password) {
         console.log('req', req.body.password);
         res.cookie('token', token, {maxAge: 900000, httpOnly: true});
-        res.status(200).json({logged: true});
+        res.sendStatus(200).json({logged: true});
         console.log('WELCOME TO MESSAGE GENERATOR');
     } else res.status(400).send({error: 'YOUR PASSWORD IS NOT DEFINED'}); // error 500 c'est pour les erreurs inattendues côté serveur. Pour un mauvais mot de passe on met plutot : 400 ou 401. Voici là liste des code : https://fr.wikipedia.org/wiki/Liste_des_codes_HTTP
 });
-app.get('/generators', function (req, res) {
+app.get('/generators', tokenCheck , function (req, res , err) {
     // console.log('collection' , collection);
     generator.getGenerators(collection).then((value) => {
         res.json({'generators': value});
+        res.sendStatus(200)
+    }).catch((err) => {
+        res.sendStatus(500);
     });
 });
 
@@ -64,19 +67,14 @@ app.delete('/generator/:id', tokenCheck, function (req, res, err) {
 
     generator.deleteGenerator(collection, req.params.id).then((item) => {
         console.log(item);
+        res.sendStatus(200);
     })
         .catch((err) => {
             if (!req.params.id) {
-                const error = new Error('missing id');
-                res.status(404).json({
-                    error: {
-                        message: error
-                    }
-                })
+                res.sendStatus(404);
+
             }else {
-                res.status(400).json({
-                    errorMessage : 'bad request'
-                })
+                res.sendStatus(500);
 
             }
             console.error('something went wrong', err);

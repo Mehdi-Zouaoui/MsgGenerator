@@ -211,12 +211,7 @@ class GeneratorForm extends React.Component {
                 console.log('Generator res', res);
                 window.location = '/generators'
             }
-        ).catch(error => {
-            console.log(error);
-            alert(`You're not authenticated`);
-            window.location = '/login';
-        })
-
+        )
     }
 
 
