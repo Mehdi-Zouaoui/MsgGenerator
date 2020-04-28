@@ -1,18 +1,19 @@
 import React from 'react';
 import axios from 'axios'
 import Generator from './Generator'
+import AlertComponent from "./AlertComponent";
 // const database = require('../../../server/database');
 
 const lodash = require('lodash');
 
-class Generators extends React.Component {
+class GeneratorList extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
             generatorsArray: [],
             updatedGeneratorsArray: [],
-
+            error: false,
             updated: false
         };
     }
@@ -27,15 +28,18 @@ class Generators extends React.Component {
         return this.setState({generatorsArray: data.generators});
     }
 
-    async deleteGenerator(id) {
+    deleteGenerator(id) {
         let clone = lodash.cloneDeep(this.state.generatorsArray);
-        clone.splice(clone.findIndex(generator => generator._id === id), 1);
-        this.setState({generatorsArray: clone}, () => {
-            console.log(this.state);
-            console.log(id);
-        });
-        await axios.delete('/generator/' + id)
+
+        axios.delete('/generator/' + id).then(() => {
+            clone.splice(clone.findIndex(generator => generator._id === id), 1);
+            this.setState({generatorsArray: clone}, () => {
+                console.log(this.state);
+                console.log(id);
+            });
+        })
             .catch((err) => {
+                this.setState({error: true});
                 if (err.response.status === 404) {
                     console.log('Missing Id', err);
                     this.refresh();
@@ -60,10 +64,11 @@ class Generators extends React.Component {
                 <Generator delete={this.deleteGenerator.bind(this)}
                            array={this.state.generatorsArray}
                            update={this.update.bind(this)}/>
+                <div>{this.state.error ? <AlertComponent/> : ''}</div>
             </div>
         );
     }
 
 }
 
-export default Generators;
+export default GeneratorList;
