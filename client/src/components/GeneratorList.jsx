@@ -25,7 +25,7 @@ class GeneratorList extends React.Component {
     async refresh() {
         const response = await fetch('/generators');
         const data = await response.json();
-        return this.setState({generatorsArray: data.generators});
+        return this.setState({generatorsArray: data.generators , error : false});
     }
 
     deleteGenerator(id) {
