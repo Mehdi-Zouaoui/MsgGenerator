@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import axios from "axios";
+import {Redirect} from "react-router-dom";
 
 const lodash = require('lodash');
 
@@ -16,6 +17,8 @@ class GeneratorForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            updated: false,
+            redirect: null,
             name: '',
             facebookChecked: false,
             youtubeChecked: false,
@@ -42,7 +45,7 @@ class GeneratorForm extends React.Component {
     }
 
     getGeneratorWithId() {
-        axios.put('/generator/' + this.props.match.params.id).then((res) => {
+        axios.get('/generator/' + this.props.match.params.id).then((res) => {
             console.log('updateRes', res);
             let data = res.data.updatedGenerator;
             if (data.socialNetworks.find(socialNetwork => socialNetwork === 'facebook')) this.setState({facebookChecked: true});
@@ -51,14 +54,15 @@ class GeneratorForm extends React.Component {
             if (data.socialNetworks.find(socialNetwork => socialNetwork === 'twitch')) this.setState({twitchChecked: true});
             if (data.socialNetworks.find(socialNetwork => socialNetwork === 'twitter')) this.setState({twitterChecked: true});
             this.setState({
+                updated: true,
                 name: data.name,
                 speed: data.speed,
                 keywords: data.keywords,
                 minNumber: data.minNumber,
                 maxNumber: data.maxNumber,
                 generatorModel: data.generatorModel
-            })
-
+            });
+            return data;
         }).catch((err) => {
             console.log(err)
         });
@@ -137,30 +141,42 @@ class GeneratorForm extends React.Component {
     // }
 
     handleSubmit(event) {
-
         let stateClone = lodash.cloneDeep(this.state);
         console.log('Clone ici ', stateClone);
-        let keywords = this.state.keywords.split('\n');
-        console.log(keywords);
-        stateClone.keywords = keywords;
+        if (this.state.keywords.length > 1) {
+            stateClone.keywords = this.state.keywords.split('\n');
+        }
         if (stateClone.facebookChecked) stateClone.socialNetworks.push('facebook');
         if (stateClone.youtubeChecked) stateClone.socialNetworks.push('youtube');
         if (stateClone.instagramChecked) stateClone.socialNetworks.push('instagram');
         if (stateClone.twitchChecked) stateClone.socialNetworks.push('twitch');
         if (stateClone.twitterChecked) stateClone.socialNetworks.push('twitter');
+        this.setState({redirect: '/generators'});
 
         event.preventDefault();
-        axios.put('/generator', stateClone).then(
-            res => {
-                console.log('Generator res', res);
-                window.location = '/generators'
-            }
-        )
+        if (!this.state.updated) {
+            axios.put('/generator', stateClone).then(
+                res => {
+                    console.log('Generator res', res);
+
+                }
+            )
+        } else {
+            axios.put('/generator/:id', stateClone).then(
+                res => {
+                    console.log('Generator res', res);
+
+                }
+            )
+        }
+
     }
 
 
     render() {
-        console.log(this.state);
+        // if (this.state.redirect) {
+        //     return <Redirect to={this.state.redirect}/>
+        // }
         return (
             <div>
                 <h1 className="my-5">Cliclic Message Generator {this.props.match.params.id}</h1>

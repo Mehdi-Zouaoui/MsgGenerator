@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const mongo = require('mongodb');
 const url = 'mongodb://localhost:27017/messageGenerator';
-
+const ObjectId = require('mongodb').ObjectID;
 const generatorSchema = new mongoose.Schema(
     {
         name: String,
@@ -38,6 +38,11 @@ function getGenerator(collection , id) {
          return (item);
     })
 }
+function updateGenerator(collection , id , objectUpdated){
+    console.log('object' , objectUpdated);
+   collection.replaceOne({_id : ObjectId(id)} , objectUpdated)
+
+}
 
 function deleteGenerator(collection, id) {
     console.log('deleted');
@@ -58,6 +63,7 @@ module.exports = {
     getGenerators,
     deleteGenerator,
     createGenerator,
-    getGenerator
+    getGenerator,
+    updateGenerator
 };
 

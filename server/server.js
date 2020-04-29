@@ -80,14 +80,30 @@ app.delete('/generator/:id', tokenCheck, function (req, res, err) {
             console.error('something went wrong', err);
         });
 });
-app.put('/generator/:id', tokenCheck, function (req, res) {
-    console.log('Update');
-    generator.getGenerator(collection  , req.params.id).then((item) => {
-        console.log('Server item', item);
-        res.json({'updatedGenerator' : item});
-        res.sendStatus(200);
 
+app.get('/generator/:id', tokenCheck, function (req, res) {
+    console.log('get id' , req.params.id);
+    generator.getGenerator(collection, req.params.id, req, res).then((item) => {
+        console.log('Server item', item);
+        res.json({'updatedGenerator': item});
+        res.sendStatus(200);
     })
+});
+
+app.put('/generator/:id', tokenCheck, function (req, res) {
+    console.log(req.params.id);
+    let updatedGenerator = {
+        name: req.body.name,
+        socialNetworks: req.body.socialNetworks,
+        speed: req.body.speed,
+        keywords: req.body.keywords,
+        minNumber: req.body.minNumber,
+        maxNumber: req.body.maxNumber,
+        generatorModel: req.body.generatorModel
+    };
+    console.log('Update', updatedGenerator);
+    generator.updateGenerator(collection , req.params.id , updatedGenerator);
+
 });
 
 app.put('/generator', tokenCheck, function (req, res) {
