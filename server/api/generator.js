@@ -32,8 +32,11 @@ function createGenerator(collection, item) {
         .catch(err => console.error('failed to push to dabase', err))
 }
 
-function getGenerator() {
-
+function getGenerator(collection , id) {
+    return collection.findOne({_id : id}).then((item) => {
+        console.log(item);
+         return (item);
+    })
 }
 
 function deleteGenerator(collection, id) {

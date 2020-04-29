@@ -53,6 +53,11 @@ class GeneratorList extends React.Component {
     }
 
     update(id) {
+        axios.put('/generator/' + id).then((res) => {
+            console.log(res)
+        }).catch((err) => {
+            console.log(err)
+        });
         window.location = '/login:id'
     }
 

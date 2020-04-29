@@ -50,7 +50,7 @@ app.post('/login', function (req, res) {
         console.log('WELCOME TO MESSAGE GENERATOR');
     } else res.status(400).send({error: 'YOUR PASSWORD IS NOT DEFINED'}); // error 500 c'est pour les erreurs inattendues côté serveur. Pour un mauvais mot de passe on met plutot : 400 ou 401. Voici là liste des code : https://fr.wikipedia.org/wiki/Liste_des_codes_HTTP
 });
-app.get('/generators', tokenCheck , function (req, res , err) {
+app.get('/generators', tokenCheck, function (req, res, err) {
     // console.log('collection' , collection);
     generator.getGenerators(collection).then((value) => {
         res.json({'generators': value});
@@ -73,14 +73,16 @@ app.delete('/generator/:id', tokenCheck, function (req, res, err) {
             if (!req.params.id) {
                 res.sendStatus(404);
 
-            }else {
+            } else {
                 res.sendStatus(500);
 
             }
             console.error('something went wrong', err);
         });
 });
-
+app.put('/generator:id', tokenCheck, function (req, res) {
+    console.log('Update')
+});
 
 app.put('/generator', tokenCheck, function (req, res) {
 

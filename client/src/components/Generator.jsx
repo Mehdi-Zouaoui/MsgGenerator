@@ -6,8 +6,9 @@ class Generator extends React.Component {
         this.props.delete(id);
         console.log(this.props)
     }
-    update(id){
-    this.props.update(id)
+
+    update(id) {
+        this.props.update(id)
     }
 
 
@@ -22,10 +23,12 @@ class Generator extends React.Component {
                             className="col-6 d-flex justify-content-center align-items-center">{generator.keywords.join('\n')}</div>
                         <div className="col-1">Interval : {generator.minNumber} - {generator.maxNumber}</div>
                         <div className="col-1"> Modèle : {generator.generatorModel}</div>
-                        <button className="btn btn-danger col-1" onClick={() => this.delete(generator._id)}>Delete
-                        </button>
-                        <button className="btn btn-primary col-1" onClick={() => this.update(generator._id)}>Update
-                        </button>
+                        <div>
+                            <button className="btn btn-danger col-12" onClick={() => this.delete(generator._id)}>Delete
+                            </button>
+                            <button className="btn btn-primary col-12" onClick={() => this.update(generator._id)}>Update
+                            </button>
+                        </div>
                     </div>
                 </li>
             )
@@ -33,4 +36,5 @@ class Generator extends React.Component {
     }
 
 }
+
 export default Generator
