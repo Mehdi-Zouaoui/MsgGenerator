@@ -80,8 +80,12 @@ app.delete('/generator/:id', tokenCheck, function (req, res, err) {
             console.error('something went wrong', err);
         });
 });
-app.put('/generator:id', tokenCheck, function (req, res) {
-    console.log('Update')
+app.put('/generator/:id', tokenCheck, function (req, res) {
+    console.log('Update');
+    generator.getGenerator(req.params.id).then((item) => {
+        console.log(item);
+        res.sendStatus(200);
+    })
 });
 
 app.put('/generator', tokenCheck, function (req, res) {

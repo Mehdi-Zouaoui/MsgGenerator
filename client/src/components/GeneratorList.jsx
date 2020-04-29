@@ -58,7 +58,7 @@ class GeneratorList extends React.Component {
         }).catch((err) => {
             console.log(err)
         });
-        window.location = '/login:id'
+
     }
 
     render() {

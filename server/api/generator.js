@@ -33,7 +33,7 @@ function createGenerator(collection, item) {
 }
 
 function getGenerator(collection , id) {
-    return collection.findOne({_id : id}).then((item) => {
+    return collection.findOne({_id : new mongo.ObjectID(id)}).then((item) => {
         console.log(item);
          return (item);
     })
@@ -57,6 +57,7 @@ function deleteGenerator(collection, id) {
 module.exports = {
     getGenerators,
     deleteGenerator,
-    createGenerator
+    createGenerator,
+    getGenerator
 };
 
