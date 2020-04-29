@@ -82,7 +82,7 @@ app.delete('/generator/:id', tokenCheck, function (req, res, err) {
 });
 app.put('/generator/:id', tokenCheck, function (req, res) {
     console.log('Update');
-    generator.getGenerator(req.params.id).then((item) => {
+    generator.getGenerator(collection  , req.params.id).then((item) => {
         console.log(item);
         res.sendStatus(200);
     })
