@@ -82,7 +82,7 @@ app.delete('/generator/:id', tokenCheck, function (req, res, err) {
 });
 
 app.get('/generator/:id', tokenCheck, function (req, res) {
-    console.log('get id' , req.params.id);
+    console.log('get id', req.params.id);
     generator.getGenerator(collection, req.params.id, req, res).then((item) => {
         console.log('Server item', item);
         res.json({'updatedGenerator': item});
@@ -102,7 +102,7 @@ app.put('/generator/:id', tokenCheck, function (req, res) {
         generatorModel: req.body.generatorModel
     };
     console.log('Update', updatedGenerator);
-    generator.updateGenerator(collection , req.params.id , updatedGenerator);
+    generator.updateGenerator(collection, req.params.id, updatedGenerator);
 
 });
 
@@ -118,7 +118,20 @@ app.put('/generator', tokenCheck, function (req, res) {
         maxNumber: req.body.maxNumber,
         generatorModel: req.body.generatorModel
     };
-    generator.createGenerator(collection, newGenerator);
+    generator.createGenerator(collection, newGenerator).then((item) => {
+        console.log(item);
+        res.sendStatus(200);
+    }).catch((err) => {
+        if (!req.params.id) {
+            res.sendStatus(404);
+
+        } else {
+            res.sendStatus(500);
+
+        }
+        console.error('something went wrong', err);
+    });
+    ;
 
 });
 

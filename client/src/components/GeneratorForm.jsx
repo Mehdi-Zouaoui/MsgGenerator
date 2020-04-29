@@ -162,7 +162,7 @@ class GeneratorForm extends React.Component {
                 }
             )
         } else {
-            axios.put('/generator/:id', stateClone).then(
+            axios.put('/generator/' + this.props.match.params.id, stateClone).then(
                 res => {
                     console.log('Generator res', res);
 
@@ -174,9 +174,9 @@ class GeneratorForm extends React.Component {
 
 
     render() {
-        // if (this.state.redirect) {
-        //     return <Redirect to={this.state.redirect}/>
-        // }
+        if (this.state.redirect) {
+            return <Redirect to={this.state.redirect}/>
+        }
         return (
             <div>
                 <h1 className="my-5">Cliclic Message Generator {this.props.match.params.id}</h1>

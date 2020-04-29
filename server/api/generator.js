@@ -32,15 +32,23 @@ function createGenerator(collection, item) {
         .catch(err => console.error('failed to push to dabase', err))
 }
 
-function getGenerator(collection , id) {
-    return collection.findOne({_id : new mongo.ObjectID(id)}).then((item) => {
+function getGenerator(collection, id) {
+    return collection.findOne({_id: new mongo.ObjectID(id)}).then((item) => {
         console.log(`item de l'api` + item);
-         return (item);
+        return (item);
     })
 }
-function updateGenerator(collection , id , objectUpdated){
-    console.log('object' , objectUpdated);
-   collection.replaceOne({_id : ObjectId(id)} , objectUpdated)
+
+function updateGenerator(collection, id, objectUpdated) {
+    console.log('object', objectUpdated);
+    return collection.replaceOne({_id: ObjectId(id)}, objectUpdated).then((res) => {
+        console.log('Updated', res);
+        return res
+    }).catch((err) => {
+        console.error('failed with error', err);
+        throw err
+
+    });
 
 }
 
