@@ -34,7 +34,7 @@ function createGenerator(collection, item) {
 
 function getGenerator(collection , id) {
     return collection.findOne({_id : new mongo.ObjectID(id)}).then((item) => {
-        console.log(item);
+        console.log(`item de l'api` + item);
          return (item);
     })
 }

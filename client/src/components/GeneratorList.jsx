@@ -53,7 +53,7 @@ class GeneratorList extends React.Component {
     }
 
     update(id) {
-        window.location ="/generator/update/" + id;
+        window.location ="/generator/" + id;
     }
 
     render() {

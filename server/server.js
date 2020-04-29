@@ -83,13 +83,14 @@ app.delete('/generator/:id', tokenCheck, function (req, res, err) {
 app.put('/generator/:id', tokenCheck, function (req, res) {
     console.log('Update');
     generator.getGenerator(collection  , req.params.id).then((item) => {
-        console.log(item);
+        console.log('Server item', item);
+        res.json({'updatedGenerator' : item});
         res.sendStatus(200);
+
     })
 });
 
 app.put('/generator', tokenCheck, function (req, res) {
-
     console.log("HEY HELLO");
     console.log('Data', req.body);
     let newGenerator = {

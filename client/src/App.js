@@ -1,11 +1,10 @@
 import React from 'react';
-import HomePage from "./components/GeneratorForm";
 import './app.css';
 import LoginForm from "./components/LoginForm";
 import Header from "./components/Header";
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
 import GeneratorList from "./components/GeneratorList";
-import UpdateGenerator from "./components/UpdateGenerator";
+import GeneratorForm from "./components/GeneratorForm";
 
 class App extends React.Component {
     constructor(props) {
@@ -45,10 +44,10 @@ class App extends React.Component {
                     <Header signOut={this.signOut}/>
                     <Switch>
                         <Route path="/generators" exact component={GeneratorList}/>
-                        <Route path="/generator" component={HomePage}/>
+                        <Route path="/generator/:id?" component={GeneratorForm}/>
                         <Route path="/login" component={LoginForm} setLogged={this.setLogged}
                                isLogged={this.state.isLogged}/>
-                        <Route path="/generator/update/:id" component={UpdateGenerator}/>
+                        {/*<Route path="/generator/update/:id" component={UpdateGenerator}/>*/}
                     </Switch>
                 </div>
             </Router>

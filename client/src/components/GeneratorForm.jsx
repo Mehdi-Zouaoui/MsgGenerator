@@ -11,7 +11,6 @@ const formStyle = {
 };
 
 
-
 class GeneratorForm extends React.Component {
 
     constructor(props) {
@@ -41,6 +40,35 @@ class GeneratorForm extends React.Component {
         this.onMaxChange = this.onMaxChange.bind(this);
         // this.handleChecked = this.handleChecked.bind(this);
     }
+
+    getGeneratorWithId() {
+        axios.put('/generator/' + this.props.match.params.id).then((res) => {
+            console.log('updateRes', res);
+            let data = res.data.updatedGenerator;
+            if (data.socialNetworks.find(socialNetwork => socialNetwork === 'facebook')) this.setState({facebookChecked: true});
+            if (data.socialNetworks.find(socialNetwork => socialNetwork === 'youtube')) this.setState({youtubeChecked: true});
+            if (data.socialNetworks.find(socialNetwork => socialNetwork === 'instagram')) this.setState({instagramChecked: true});
+            if (data.socialNetworks.find(socialNetwork => socialNetwork === 'twitch')) this.setState({twitchChecked: true});
+            if (data.socialNetworks.find(socialNetwork => socialNetwork === 'twitter')) this.setState({twitterChecked: true});
+            this.setState({
+                name: data.name,
+                speed: data.speed,
+                keywords: data.keywords,
+                minNumber: data.minNumber,
+                maxNumber: data.maxNumber,
+                generatorModel: data.generatorModel
+            })
+
+        }).catch((err) => {
+            console.log(err)
+        });
+    }
+
+    componentDidMount() {
+        this.getGeneratorWithId();
+        console.log(this.props);
+    }
+
 
     changeName(event) {
         const value = event.target.value;
@@ -132,9 +160,10 @@ class GeneratorForm extends React.Component {
 
 
     render() {
+        console.log(this.state);
         return (
             <div>
-                <h1 className="my-5">Cliclic Message Generator</h1>
+                <h1 className="my-5">Cliclic Message Generator {this.props.match.params.id}</h1>
                 {/*<button onClick={this.doYouHaveCookie()}> Cookie</button>*/}
                 <form style={formStyle} method="PUT" onSubmit={this.handleSubmit} className="mt-5 py-3 card col-10 ">
                     {/*<FormHeader*/}
