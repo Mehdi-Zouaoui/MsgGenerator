@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from "axios";
 
 class UpdateGenerator extends React.Component{
 
@@ -10,7 +11,12 @@ class UpdateGenerator extends React.Component{
     }
 
     componentDidMount() {
-
+        axios.put('/generator/' + this.props.params.id).then((res) => {
+            console.log('updateRes' , res);
+            this.setState({generatorData : res})
+        }).catch((err) => {
+            console.log(err)
+        });
     }
 
     handleSubmit(data) {
@@ -19,7 +25,8 @@ class UpdateGenerator extends React.Component{
     render() {
         return(
             <div>
-
+            Update
+                {this.state.generatorData}
             </div>
         )
     }

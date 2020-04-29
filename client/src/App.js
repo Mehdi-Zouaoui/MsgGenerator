@@ -5,6 +5,7 @@ import LoginForm from "./components/LoginForm";
 import Header from "./components/Header";
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
 import GeneratorList from "./components/GeneratorList";
+import UpdateGenerator from "./components/UpdateGenerator";
 
 class App extends React.Component {
     constructor(props) {
@@ -47,6 +48,7 @@ class App extends React.Component {
                         <Route path="/generator" component={HomePage}/>
                         <Route path="/login" component={LoginForm} setLogged={this.setLogged}
                                isLogged={this.state.isLogged}/>
+                        <Route path="/generator/update/:id" component={UpdateGenerator}/>
                     </Switch>
                 </div>
             </Router>
