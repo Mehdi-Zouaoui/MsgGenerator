@@ -48,6 +48,7 @@ class GeneratorForm extends React.Component {
         axios.get('/generator/' + this.props.match.params.id).then((res) => {
             console.log('updateRes', res);
             let data = res.data.updatedGenerator;
+
             if (data.socialNetworks.find(socialNetwork => socialNetwork === 'facebook')) this.setState({facebookChecked: true});
             if (data.socialNetworks.find(socialNetwork => socialNetwork === 'youtube')) this.setState({youtubeChecked: true});
             if (data.socialNetworks.find(socialNetwork => socialNetwork === 'instagram')) this.setState({instagramChecked: true});
@@ -69,10 +70,11 @@ class GeneratorForm extends React.Component {
     }
 
     componentDidMount() {
-        this.getGeneratorWithId();
-        console.log(this.props);
+        if(this.props.match.params.id){
+            this.getGeneratorWithId();
+            console.log(this.props);
+        }
     }
-
 
     changeName(event) {
         const value = event.target.value;
@@ -141,6 +143,7 @@ class GeneratorForm extends React.Component {
     // }
 
     handleSubmit(event) {
+        debugger
         let stateClone = lodash.cloneDeep(this.state);
         console.log('Clone ici ', stateClone);
         if (this.state.keywords.length > 1) {
@@ -158,7 +161,6 @@ class GeneratorForm extends React.Component {
             axios.put('/generator', stateClone).then(
                 res => {
                     console.log('Generator res', res);
-
                 }
             )
         } else {

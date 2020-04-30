@@ -9,7 +9,6 @@ import GeneratorForm from "./components/GeneratorForm";
 class App extends React.Component {
     constructor(props) {
         super(props);
-
         const stateRef = localStorage.getItem('state');
         if (stateRef) {
             this.currentState = JSON.parse(stateRef).isLogged;
@@ -17,7 +16,6 @@ class App extends React.Component {
         this.state = {
             isLogged: stateRef ? this.currentState : false
         };
-
         this.setLogged = this.setLogged.bind(this);
         this.signOut = this.signOut.bind(this);
     }
@@ -35,9 +33,7 @@ class App extends React.Component {
 
     }
 
-
     render() {
-
         return (
             <Router>
                 <div className="App container-fluid justify-content-center" style={{paddingLeft: 0, paddingRight: 0}}>

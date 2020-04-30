@@ -1,23 +1,5 @@
-const mongoose = require("mongoose");
 const mongo = require('mongodb');
-const url = 'mongodb://localhost:27017/messageGenerator';
 const ObjectId = require('mongodb').ObjectID;
-const generatorSchema = new mongoose.Schema(
-    {
-        name: String,
-        link: String,
-        createdAt: Date,
-        socialNetwork: String,
-        keyword: Array,
-        range: Number,
-        model: Array,
-        speed: Number,
-        users: {
-            number: Number,
-            commentRange: Number
-        }
-    }
-);
 
 function getGenerators(collection) {
     return collection.find({}).toArray().then((item) => {
@@ -27,7 +9,7 @@ function getGenerators(collection) {
 }
 
 function createGenerator(collection, item) {
-    collection.insertOne(item)
+    return collection.insertOne(item)
         .then(res => console.log('Element as been pushed to database', res))
         .catch(err => console.error('failed to push to dabase', err))
 }
@@ -35,7 +17,7 @@ function createGenerator(collection, item) {
 function getGenerator(collection, id) {
     return collection.findOne({_id: new mongo.ObjectID(id)}).then((item) => {
         console.log(`item de l'api` + item);
-        return (item);
+        return item;
     })
 }
 

@@ -1,6 +1,15 @@
 import React from "react";
+import {Redirect} from "react-router-dom";
+import AlertComponent from "./AlertComponent";
 
 class Generator extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            redirect: null,
+            error: false
+        }
+    }
 
     delete(id) {
         this.props.delete(id);
@@ -8,11 +17,14 @@ class Generator extends React.Component {
     }
 
     update(id) {
-        this.props.update(id)
+        this.props.id(id);
+        this.setState({redirect: '/generator/' + id});
     }
 
-
     render() {
+        if (this.state.redirect) {
+            return <Redirect to={this.state.redirect}/>
+        }
         return (
             this.props.array.map(generator =>
                 <li className="card" key={generator._id}>
@@ -34,7 +46,6 @@ class Generator extends React.Component {
             )
         );
     }
-
 }
 
 export default Generator

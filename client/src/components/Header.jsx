@@ -2,15 +2,9 @@ import React from "react";
 import logo from '../assets/logo.png'
 import {Link} from "react-router-dom";
 
-const navStyle = {
-    color: 'white'
-
-};
-
 class Header extends React.Component {
 
     render() {
-
         return (
             <nav className="navbar navbar-light bg-primary d-flex">
                 <a className="navbar-brand" href="#">

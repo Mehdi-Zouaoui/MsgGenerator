@@ -1,8 +1,6 @@
 const mongo = require('mongodb').MongoClient;
-const mongoose = require('mongoose');
 const url = 'mongodb://localhost:27017/messageGenerator';
-let db = null;
-let collection = null;
+
 
 function connect() {
     return mongo.connect(url).then((client) => {
@@ -15,18 +13,6 @@ function connect() {
 
 }
 
-function insertOne(item) {
-
-
-}
-
-function deleteOne(id) {
-    collection.deleteOne({'_id': id});
-}
-
 module.exports = {
     connect,
-    insertOne,
-    deleteOne
-
 };

@@ -1,10 +1,12 @@
 import React from "react";
-import axios from 'axios'
+import axios from 'axios';
+import {Redirect} from "react-router-dom";
 
 class LoginForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            redirect : null,
             password: ''
         };
         this.handleChange = this.handleChange.bind(this);
@@ -23,9 +25,8 @@ class LoginForm extends React.Component {
             .then(res => {
                 console.log(this.state);
                 console.log('Res here', res);
-                // this.props.setLogged();
                 console.log('local', localStorage);
-                window.location = '/generators';
+                this.setState({redirect: '/generators'});
             })
             .catch(error => {
                 console.log(error);
@@ -34,6 +35,9 @@ class LoginForm extends React.Component {
     }
 
     render() {
+        if (this.state.redirect) {
+            return <Redirect to={this.state.redirect}/>
+        }
         return (
             <div className="justify-content-center align-items-center d-flex flex-column">
                 <form method="post" onSubmit={this.handleSubmit} className="mt-5 py-3 card col-4 ">

@@ -3,8 +3,6 @@ const app = express();
 const port = process.env.PORT || 5000;
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-// const events = require('events');
-// // const eventEmitter = new events.EventEmitter();
 const password = "CliclicTV";
 const database = require('./database');
 const timeout = require('connect-timeout');
@@ -16,7 +14,6 @@ app.use(cookieParser());
 app.use(bodyParser());
 app.use(timeout(100000));
 app.use(haltOnTimedout);
-
 
 database.connect().then((client) => {
     db = client.db;
@@ -35,7 +32,6 @@ let tokenCheck = function (req, res, next) {
         res.sendStatus(401);
         next(new Error('Un-Authorized'));
     }
-
 };
 
 
@@ -51,7 +47,6 @@ app.post('/login', function (req, res) {
     } else res.status(400).send({error: 'YOUR PASSWORD IS NOT DEFINED'}); // error 500 c'est pour les erreurs inattendues côté serveur. Pour un mauvais mot de passe on met plutot : 400 ou 401. Voici là liste des code : https://fr.wikipedia.org/wiki/Liste_des_codes_HTTP
 });
 app.get('/generators', tokenCheck, function (req, res, err) {
-    // console.log('collection' , collection);
     generator.getGenerators(collection).then((value) => {
         res.json({'generators': value});
         res.sendStatus(200)
@@ -67,7 +62,7 @@ app.delete('/generator/:id', tokenCheck, function (req, res, err) {
 
     generator.deleteGenerator(collection, req.params.id).then((item) => {
         console.log(item);
-        res.sendStatus(200);
+        res.sendStatus(400);
     })
         .catch((err) => {
             if (!req.params.id) {
@@ -87,7 +82,14 @@ app.get('/generator/:id', tokenCheck, function (req, res) {
         console.log('Server item', item);
         res.json({'updatedGenerator': item});
         res.sendStatus(200);
-    })
+    }).catch((err) => {
+        if (!req.params.id) {
+            res.sendStatus(404);
+        } else {
+            res.sendStatus(500);
+        }
+        console.error('something went wrong', err);
+    });
 });
 
 app.put('/generator/:id', tokenCheck, function (req, res) {
@@ -102,7 +104,16 @@ app.put('/generator/:id', tokenCheck, function (req, res) {
         generatorModel: req.body.generatorModel
     };
     console.log('Update', updatedGenerator);
-    generator.updateGenerator(collection, req.params.id, updatedGenerator);
+    generator.updateGenerator(collection, req.params.id, updatedGenerator).then(() => {
+        res.sendStatus(200);
+    }).catch((err) => {
+        if (!req.params.id) {
+            res.sendStatus(404);
+        } else {
+            res.sendStatus(500);
+        }
+        console.error('something went wrong', err);
+    });
 
 });
 
@@ -122,16 +133,8 @@ app.put('/generator', tokenCheck, function (req, res) {
         console.log(item);
         res.sendStatus(200);
     }).catch((err) => {
-        if (!req.params.id) {
-            res.sendStatus(404);
-
-        } else {
-            res.sendStatus(500);
-
-        }
+        res.sendStatus(500);
         console.error('something went wrong', err);
     });
-    ;
-
 });
 
