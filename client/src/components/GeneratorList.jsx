@@ -34,7 +34,9 @@ class GeneratorList extends React.Component {
     deleteGenerator(id) {
         let clone = lodash.cloneDeep(this.state.generatorsArray);
         axios.delete('/generator/' + id).then(() => {
-            clone.splice(clone.findIndex(generator => generator._id === id), 1);
+            let findId = clone.findIndex(generator => generator._id === id);
+            console.log('sameID' , findId);
+            if(findId > -1) clone.splice(findId, 1);
             this.setState({generatorsArray: clone}, () => {
                 console.log(this.state);
                 console.log(id);

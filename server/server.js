@@ -62,7 +62,7 @@ app.delete('/generator/:id', tokenCheck, function (req, res, err) {
 
     generator.deleteGenerator(collection, req.params.id).then((item) => {
         console.log(item);
-        res.sendStatus(400);
+        res.sendStatus(200);
     })
         .catch((err) => {
             if (!req.params.id) {
