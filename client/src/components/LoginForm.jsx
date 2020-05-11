@@ -1,6 +1,8 @@
 import React from "react";
 import axios from 'axios';
+import App from "../App";
 import {Redirect} from "react-router-dom";
+import auth from "./auth";
 
 class LoginForm extends React.Component {
     constructor(props) {
@@ -19,13 +21,16 @@ class LoginForm extends React.Component {
     }
 
     handleSubmit(event) {
+
         console.log('Le mot de passe a été soumis : ' + this.state.password);
         event.preventDefault();
         axios.post('/login', this.state)
             .then(res => {
+                auth.login();
                 console.log(this.state);
                 console.log('Res here', res);
                 console.log('local', localStorage);
+                console.log(this.props);
                 this.setState({redirect: '/generators'});
             })
             .catch(error => {
@@ -39,18 +44,20 @@ class LoginForm extends React.Component {
             return <Redirect to={this.state.redirect}/>
         }
         return (
-            <div className="justify-content-center align-items-center d-flex flex-column">
-                <form method="post" onSubmit={this.handleSubmit} className="mt-5 py-3 card col-4 ">
+
+            <div style={{height : "100vh"}} className="justify-content-center align-items-center d-flex flex-column">
+
+                <form method="post" onSubmit={this.handleSubmit} className=" py-3 card col-4 ">
+
                     <h3 className="mb-4">Login</h3>
                     <div className="form-group">
                         <label htmlFor="passwordInput">Password </label>
                         <input className="form-control" type="password" id="passwordInput" value={this.state.password}
                                onChange={this.handleChange}/>
                     </div>
-                    <input className="btn btn-primary" type="submit" value="Envoyer"/>
-                    <p>{this.state.password}</p>
+                    <input className="btn btn-info" type="submit" value="Envoyer"/>
                 </form>
-                {this.props.isLogged ? <p className="mt-5"> You're Logged </p> : <p className="mt-5">Wrong password</p>}
+                {auth.isAuthenticated() ? <p className="mt-5 text-light"> You're Logged </p> : <p className="mt-5 text-light">Wrong password</p>}
             </div>
         );
     }

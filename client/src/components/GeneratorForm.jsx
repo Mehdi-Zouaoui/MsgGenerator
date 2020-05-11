@@ -8,9 +8,13 @@ const lodash = require('lodash');
 const formStyle = {
     display: 'flex',
     alignItems: 'center',
+
     margin: 'auto'
 };
 
+const borders = {
+    borderWidth: "3px"
+};
 
 class GeneratorForm extends React.Component {
 
@@ -70,7 +74,7 @@ class GeneratorForm extends React.Component {
     }
 
     componentDidMount() {
-        if(this.props.match.params.id){
+        if (this.props.match.params.id) {
             this.getGeneratorWithId();
             console.log(this.props);
         }
@@ -176,98 +180,112 @@ class GeneratorForm extends React.Component {
 
 
     render() {
+        // if (!this.props.isLogged) {
+        //     console.log(this.props.isLogged);
+        //     return <Redirect to={'/login'}/>
+        // }
+
         if (this.state.redirect) {
             return <Redirect to={this.state.redirect}/>
         }
         return (
             <div>
-                <h1 className="my-5">Cliclic Message Generator {this.props.match.params.id}</h1>
+                <h1 className="mx-auto my-5 col-10 text-light display-4">Cliclic Message
+                    Generator {this.props.match.params.id}</h1>
                 {/*<button onClick={this.doYouHaveCookie()}> Cookie</button>*/}
-                <form style={formStyle} method="PUT" onSubmit={this.handleSubmit} className="mt-5 py-3 card col-10 ">
+                <form style={formStyle} method="PUT" onSubmit={this.handleSubmit}
+                      className="mt-5 py-3 card col-10 bg-dark border border-info ">
                     {/*<FormHeader*/}
                     {/*<Options/>*/}
                     {/*<Config/>*/}
 
-                    <div className="row">
-                        <div className="col-6">
-                            <label htmlFor="name">Nom du Generateur</label>
-                            <input type="text" id='name' className="form-control" onChange={this.changeName}
-                                   placeholder="Generateur" value={this.state.name}/>
-                        </div>
-                        <div className="col-6">
-                            <label htmlFor="socialNetworks">Réseaux Sociaux</label>
-                            <div id="socialNetworks">
-                                <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="checkbox" id="inlineCheckbox1"
-                                           checked={this.state.facebookChecked} onChange={() => this.onChangeFacebook()}
-                                           value="option1"/>
-                                    <label className="form-check-label" htmlFor="inlineCheckbox1">Facebook</label>
-                                </div>
-                                <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="checkbox" id="inlineCheckbox2"
-                                           checked={this.state.youtubeChecked} onChange={() => this.onChangeYoutube()}
-                                           value="option2"/>
-                                    <label className="form-check-label" htmlFor="inlineCheckbox2">Youtube</label>
-                                </div>
-                                <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="checkbox" id="inlineCheckbox3"
-                                           checked={this.state.instagramChecked}
-                                           onChange={() => this.onChangeInstagram()}
-                                           value="option3"/>
-                                    <label className="form-check-label" htmlFor="inlineCheckbox3"> Instagram </label>
-                                </div>
-                                <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="checkbox" id="inlineCheckbox4"
-                                           checked={this.state.twitchChecked} onChange={() => this.onChangeTwitch()}
-                                           value="option4"/>
-                                    <label className="form-check-label" htmlFor="inlineCheckbox4"> Twitch </label>
-                                </div>
-                                <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="checkbox" id="inlineCheckbox5"
-                                           checked={this.state.twitterChecked} onChange={() => this.onChangeTwitter()}
-                                           value="option5"/>
-                                    <label className="form-check-label" htmlFor="inlineCheckbox5"> Twitter </label>
-                                </div>
+                    <div className="row col-6">
+                        <label htmlFor="name" className="h3 text-light ">Nom du Generateur</label>
+                        <input type="text" id='name' className="form-control" onChange={this.changeName}
+                               placeholder="Generateur" value={this.state.name}/>
+                    </div>
+                    <div className=" row col-6">
+                        <label htmlFor="socialNetworks" className="text-light h4 mt-3"> Réseaux Sociaux</label>
+                        <div id="socialNetworks">
+                            <div className="form-check form-check-inline ">
+                                <input className="form-check-input" type="checkbox" id="inlineCheckbox1"
+                                       checked={this.state.facebookChecked} onChange={() => this.onChangeFacebook()}
+                                       value="option1"/>
+                                <label className="form-check-label text-light"
+                                       htmlFor="inlineCheckbox1">Facebook</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="checkbox" id="inlineCheckbox2"
+                                       checked={this.state.youtubeChecked} onChange={() => this.onChangeYoutube()}
+                                       value="option2"/>
+                                <label className="form-check-label text-light" htmlFor="inlineCheckbox2">Youtube</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="checkbox" id="inlineCheckbox3"
+                                       checked={this.state.instagramChecked}
+                                       onChange={() => this.onChangeInstagram()}
+                                       value="option3"/>
+                                <label className="form-check-label text-light"
+                                       htmlFor="inlineCheckbox3"> Instagram </label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="checkbox" id="inlineCheckbox4"
+                                       checked={this.state.twitchChecked} onChange={() => this.onChangeTwitch()}
+                                       value="option4"/>
+                                <label className="form-check-label text-light"
+                                       htmlFor="inlineCheckbox4"> Twitch </label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="checkbox" id="inlineCheckbox5"
+                                       checked={this.state.twitterChecked} onChange={() => this.onChangeTwitter()}
+                                       value="option5"/>
+                                <label className="form-check-label text-light"
+                                       htmlFor="inlineCheckbox5"> Twitter </label>
                             </div>
                         </div>
                     </div>
-                    <div className='mt-5'>Vitesses des commentaire <input type="number" value={this.state.speed}
-                                                                          onChange={this.changeSpeed}/>com/min
-                    </div>
-                    <div className="col-12">
-                        <h2>Options</h2>
-                        <div className="d-flex justify-content-around">
-                            <div className="card">
-                                <div className="card-body form-group">
-                                    <div className="card-header">KeyWords</div>
-                                    <textarea className="form-control" id="exampleFormControlTextarea1"
-                                              value={this.state.keywords} onChange={this.changeKeywords} rows="3"/>
-                                </div>
-                            </div>
 
-                            <div className="card">
-                                <div className="card-body">
-                                    <div className="form-group">
-                                        <div className="card-title">Nombre compris entre</div>
-                                        <div><input type="number" value={this.state.minNumber}
-                                                    onChange={this.onMinChange}/> et <input type="number"
-                                                                                            value={this.state.maxNumber}
-                                                                                            onChange={this.onMaxChange}/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    <div className='mt-3 col-6 row h4 text-light'>Vitesses des commentaire (com/min) <input
+                        type="number" className="form-control mt-2" value={this.state.speed}
+                        onChange={this.changeSpeed}/>
 
-                            <div className="card">
-                                <div className="card-body form-group">
-                                    <div className="card-header">Modèle de commentaires</div>
-                                    <textarea className="form-control" id="exampleFormControlTextarea1"
-                                              value={this.state.generatorModel} onChange={this.changeModel} rows="3"/>
-                                </div>
-                            </div>
+                    </div>
+
+                    <div className="col-6 ">
+                        <label htmlFor="exampleFormControlTextarea1"
+                               className="h3 col-6  row text-light  ">Options</label>
+                        <div className="card">
+                            <div className="card-header bg-info h5 text-light">KeyWords</div>
+                            <textarea className="form-control" id="exampleFormControlTextarea1"
+                                      value={this.state.keywords} onChange={this.changeKeywords} rows="3"/>
+
                         </div>
                     </div>
-                    <input className="btn btn-primary" type="submit" value="Envoyer"/>
+
+
+                    <div className="col-6 mt-2">
+                        <div className="form-group col-12 text-light">
+                            <div className="card-title h5 row ">Nombre compris entre</div>
+                            <div className='row'><input type="number" className="form-control text-center" value={this.state.minNumber}
+                                        onChange={this.onMinChange}/> <p className='h5 text-center'>et</p> <input type="number"
+                                                                                className="form-control text-center"
+                                                                                value={this.state.maxNumber}
+                                                                                onChange={this.onMaxChange}/>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div className="col-6">
+                        <div className="card ">
+                            <div className="card-header bg-info h5 text-light">Modèle de commentaires</div>
+                            <textarea className="form-control" id="exampleFormControlTextarea1"
+                                      value={this.state.generatorModel} onChange={this.changeModel} rows="3"/>
+
+                        </div>
+                    </div>
+
+
+                    <input className="btn mt-3 btn-info col-2 " type="submit" value="Envoyer"/>
                 </form>
             </div>
 

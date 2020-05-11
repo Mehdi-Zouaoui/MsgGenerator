@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios'
 import Generator from './Generator'
 import AlertComponent from "./AlertComponent";
+import {Redirect} from "react-router-dom";
 
 
 const lodash = require('lodash');
@@ -60,10 +61,12 @@ class GeneratorList extends React.Component {
     }
 
     render() {
+        // if(!this.props.isLogged){
+        //     return <Redirect to={'/login'}/>
+        // }
         return (
-            <div className="text-center">
-                {this.state.id}
-                <h1 className='my-3'> Generators Liste</h1>
+            <div style={{height : "100vh"}} className=" bg-dark text-center">
+                <h1 className='my-3 text-light'> Generators Liste</h1>
                 <div>{this.state.error ? <AlertComponent/> : ''}</div>
                 <Generator delete={this.deleteGenerator.bind(this)}
                            array={this.state.generatorsArray}
