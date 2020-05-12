@@ -42,7 +42,7 @@ class App extends React.Component {
 
         return (
             <Router>
-
+                <Redirect to='./login'/>
                 <div className="App container-fluid justify-content-center bg-dark"
                      style={{paddingLeft: 0, paddingRight: 0}}>
                     <Header/>

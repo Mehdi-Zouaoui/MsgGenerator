@@ -46,7 +46,7 @@ class LoginForm extends React.Component {
         return (
 
             <div style={{height : "100vh"}} className="justify-content-center align-items-center d-flex flex-column">
-
+                <h1 className="mx-auto mb-5  text-light display-4">Cliclic Message Generator</h1>
                 <form method="post" onSubmit={this.handleSubmit} className=" py-3 card col-4 ">
 
                     <h3 className="mb-4">Login</h3>

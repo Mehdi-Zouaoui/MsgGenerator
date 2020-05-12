@@ -35,14 +35,14 @@ class Generator extends React.Component {
                         <h2 className="card-header col-2">{generator.name} </h2>
                         <div className="col-1">{generator.socialNetworks.join('\n')}</div>
                         <div
-                            className="col-5 d-flex justify-content-center align-items-center">{generator.keywords.length > 1 ? generator.keywords.join('\n') :''}</div>
+                            className="col-4 d-flex justify-content-center align-items-center">{generator.keywords.length > 1 ? generator.keywords.join('\n') :'text'}</div>
 
                         <div className="col-2 my-auto">
                             <h5>Interval </h5>
                             <div>{generator.minNumber} - {generator.maxNumber}</div>
                         </div>
 
-                        <div className="col-1 my-auto">
+                        <div className="col-2 my-auto">
                             <h5>Modèle </h5>
                             <div>{generator.generatorModel}</div></div>
                         <div>

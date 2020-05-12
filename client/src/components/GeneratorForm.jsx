@@ -147,11 +147,11 @@ class GeneratorForm extends React.Component {
     // }
 
     handleSubmit(event) {
-        debugger
         let stateClone = lodash.cloneDeep(this.state);
-        console.log('Clone ici ', stateClone);
         if (this.state.keywords.length > 1) {
             stateClone.keywords = this.state.keywords.split('\n');
+
+            console.log('Clone ici ', stateClone.keywords);
         }
         if (stateClone.facebookChecked) stateClone.socialNetworks.push('facebook');
         if (stateClone.youtubeChecked) stateClone.socialNetworks.push('youtube');
@@ -190,14 +190,15 @@ class GeneratorForm extends React.Component {
         }
         return (
             <div>
-                <h1 className="mx-auto my-5 col-10 text-light display-4">Cliclic Message
-                    Generator {this.props.match.params.id}</h1>
+                <h1 className="mx-auto my-5 col-10 text-light display-4">Formulaire de création</h1>
                 {/*<button onClick={this.doYouHaveCookie()}> Cookie</button>*/}
                 <form style={formStyle} method="PUT" onSubmit={this.handleSubmit}
                       className="mt-5 py-3 card col-10 bg-dark border border-info ">
                     {/*<FormHeader*/}
                     {/*<Options/>*/}
                     {/*<Config/>*/}
+
+
 
                     <div className="row col-6">
                         <label htmlFor="name" className="h3 text-light ">Nom du Generateur</label>
@@ -206,7 +207,7 @@ class GeneratorForm extends React.Component {
                     </div>
                     <div className=" row col-6">
                         <label htmlFor="socialNetworks" className="text-light h4 mt-3"> Réseaux Sociaux</label>
-                        <div id="socialNetworks">
+                        <div id="socialNetworks" className='col-12 row'>
                             <div className="form-check form-check-inline ">
                                 <input className="form-check-input" type="checkbox" id="inlineCheckbox1"
                                        checked={this.state.facebookChecked} onChange={() => this.onChangeFacebook()}
@@ -250,13 +251,13 @@ class GeneratorForm extends React.Component {
                         onChange={this.changeSpeed}/>
 
                     </div>
-
-                    <div className="col-6 ">
+                    <div className='row'>
+                    <div className="col-12 ">
                         <label htmlFor="exampleFormControlTextarea1"
-                               className="h3 col-6  row text-light  ">Options</label>
+                               className="display-4 col-6 my-4 text-light">Options</label>
                         <div className="card">
                             <div className="card-header bg-info h5 text-light">KeyWords</div>
-                            <textarea className="form-control" id="exampleFormControlTextarea1"
+                            <textarea className="form-control" id="exampleFormControlTextarea1" placeholder={'keyword' + '\n' + 'keyword'}
                                       value={this.state.keywords} onChange={this.changeKeywords} rows="3"/>
 
                         </div>
@@ -265,9 +266,9 @@ class GeneratorForm extends React.Component {
 
                     <div className="col-6 mt-2">
                         <div className="form-group col-12 text-light">
-                            <div className="card-title h5 row ">Nombre compris entre</div>
+                            <div className="h5 text-center">Nombre compris entre</div>
                             <div className='row'><input type="number" className="form-control text-center" value={this.state.minNumber}
-                                        onChange={this.onMinChange}/> <p className='h5 text-center'>et</p> <input type="number"
+                                        onChange={this.onMinChange}/> <div className='h5 col-12'>et</div> <input type="number"
                                                                                 className="form-control text-center"
                                                                                 value={this.state.maxNumber}
                                                                                 onChange={this.onMaxChange}/>
@@ -275,16 +276,16 @@ class GeneratorForm extends React.Component {
                         </div>
 
                     </div>
-                    <div className="col-6">
+                    <div className="col-6 mt-4">
                         <div className="card ">
                             <div className="card-header bg-info h5 text-light">Modèle de commentaires</div>
-                            <textarea className="form-control" id="exampleFormControlTextarea1"
+                            <textarea className="form-control" id="exampleFormControlTextarea1" placeholder='[word][number]'
                                       value={this.state.generatorModel} onChange={this.changeModel} rows="3"/>
 
                         </div>
                     </div>
 
-
+                    </div>
                     <input className="btn mt-3 btn-info col-2 " type="submit" value="Envoyer"/>
                 </form>
             </div>

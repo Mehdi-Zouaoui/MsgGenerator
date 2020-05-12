@@ -19,10 +19,16 @@ class GeneratorList extends React.Component {
             error: false,
             updated: false
         };
+
+    }
+
+    componentDidUpdate() {
+        this.refresh()
     }
 
     componentDidMount() {
         this.refresh().then(r => console.log(r));
+        console.log(this.state.generatorsArray)
     }
 
 
@@ -61,9 +67,7 @@ class GeneratorList extends React.Component {
     }
 
     render() {
-        // if(!this.props.isLogged){
-        //     return <Redirect to={'/login'}/>
-        // }
+
         return (
             <div style={{height : "100vh"}} className=" bg-dark text-center">
                 <h1 className='my-3 text-light'> Generators Liste</h1>
