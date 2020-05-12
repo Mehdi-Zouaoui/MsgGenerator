@@ -54,10 +54,17 @@ class GeneratorList extends React.Component {
                 if (err.response.status === 404) {
                     console.log('Missing Id', err);
                     this.refresh();
+                    throw err;
+
                 } else if (err.response.status === 500) {
-                    alert('Internal Server Error')
+                    alert('Internal Server Error');
+                    throw err;
                 }
-            })
+                else {
+                    throw err;
+                }
+            }
+            )
     }
     update(id){
 

@@ -52,6 +52,7 @@ app.get('/generators', tokenCheck, function (req, res, err) {
         res.sendStatus(200)
     }).catch((err) => {
         res.sendStatus(500);
+        console.error(err)
     });
 });
 
@@ -63,8 +64,7 @@ app.delete('/generator/:id', tokenCheck, function (req, res, err) {
     generator.deleteGenerator(collection, req.params.id).then((item) => {
         console.log(item);
         res.sendStatus(200);
-    })
-        .catch((err) => {
+    }).catch((err) => {
             if (!req.params.id) {
                 res.sendStatus(404);
 

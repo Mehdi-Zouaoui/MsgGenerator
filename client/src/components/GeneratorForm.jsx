@@ -166,14 +166,14 @@ class GeneratorForm extends React.Component {
                 res => {
                     console.log('Generator res', res);
                 }
-            )
+            ).catch(err => console.log(err))
         } else {
             axios.put('/generator/' + this.props.match.params.id, stateClone).then(
                 res => {
                     console.log('Generator res', res);
 
                 }
-            )
+            ).catch(err => console.log(err))
         }
 
     }
