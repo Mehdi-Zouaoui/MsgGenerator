@@ -4,7 +4,7 @@ const ObjectId = require('mongodb').ObjectID;
 function getGenerators(collection) {
     return collection.find({}).toArray().then((item) => {
         if (item.length) return (item);
-        else return ('error');
+        else return ([]);
     }).catch(err => console.error(err));
 }
 

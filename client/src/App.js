@@ -45,7 +45,7 @@ class App extends React.Component {
                 <Redirect to='./login'/>
                 <div className="App container-fluid justify-content-center bg-dark"
                      style={{paddingLeft: 0, paddingRight: 0}}>
-                    <Header/>
+
                     <Switch>
                         <ProtectedRoute path="/generators" exact component={GeneratorList}
                                         isLogged={this.state.isLogged}/>

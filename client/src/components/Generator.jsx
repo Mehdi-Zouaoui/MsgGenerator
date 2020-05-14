@@ -1,6 +1,9 @@
 import React from "react";
 import {Redirect} from "react-router-dom";
 import AlertComponent from "./AlertComponent";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {faHome} from "@fortawesome/free-solid-svg-icons";
+
 
 class Generator extends React.Component {
     constructor(props) {
@@ -31,8 +34,10 @@ class Generator extends React.Component {
         return (
             this.props.array.map(generator =>
                 <li className="card" key={generator._id}>
+
                     <div className=" d-flex">
-                        <h2 className="card-header col-2">{generator.name} </h2>
+                        <h2 className="card-header col-2">{generator.name}</h2>
+
                         <div className="col-1">{generator.socialNetworks.join('\n')}</div>
                         <div
                             className="col-4 d-flex justify-content-center align-items-center">{generator.keywords.length > 1 ? generator.keywords.join('\n') :'text'}</div>
@@ -56,6 +61,8 @@ class Generator extends React.Component {
                         </div>
                     </div>
                 </li>
+
+
             )
         );
     }
