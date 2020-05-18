@@ -1,7 +1,7 @@
 import React from "react";
 import {Redirect} from "react-router-dom";
 import AlertComponent from "./AlertComponent";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faHome} from "@fortawesome/free-solid-svg-icons";
 
 
@@ -17,6 +17,10 @@ class Generator extends React.Component {
     delete(id) {
         this.props.delete(id);
         console.log(this.props)
+    }
+
+    start(id) {
+        this.props.start(id);
     }
 
     update(id) {
@@ -40,7 +44,7 @@ class Generator extends React.Component {
 
                         <div className="col-1">{generator.socialNetworks.join('\n')}</div>
                         <div
-                            className="col-4 d-flex justify-content-center align-items-center">{generator.keywords.length > 1 ? generator.keywords.join('\n') :'text'}</div>
+                            className="col-4 d-flex justify-content-center align-items-center">{generator.keywords.length > 1 ? generator.keywords.join('\n') : 'text'}</div>
 
                         <div className="col-2 my-auto">
                             <h5>Interval </h5>
@@ -49,7 +53,8 @@ class Generator extends React.Component {
 
                         <div className="col-2 my-auto">
                             <h5>Modèle </h5>
-                            <div>{generator.generatorModel}</div></div>
+                            <div>{generator.generatorModel}</div>
+                        </div>
                         <div>
                             <button className="btn btn-info col-12 h-50"
                                     onClick={() => this.update(generator._id)}>Update
@@ -59,10 +64,16 @@ class Generator extends React.Component {
                                     onClick={() => this.delete(generator._id)}>Delete
                             </button>
                         </div>
+                        <div>
+                            <button className="btn btn-success col-12 h-50"
+                                    onClick={() => this.start(generator._id)}>Start
+                            </button>
+                            <button className="btn btn-warning col-12 h-50"
+                            >Stop
+                            </button>
+                        </div>
                     </div>
                 </li>
-
-
             )
         );
     }

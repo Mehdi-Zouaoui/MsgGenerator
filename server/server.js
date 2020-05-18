@@ -6,6 +6,8 @@ const bodyParser = require('body-parser');
 const password = "CliclicTV";
 const database = require('./database');
 const timeout = require('connect-timeout');
+const Flow = require('./api/flow');
+const nameArray = require('./data/prenom');
 let db = null;
 let collection = null;
 const generator = require('./api/generator');
@@ -65,23 +67,32 @@ app.delete('/generator/:id', tokenCheck, function (req, res, err) {
         console.log(item);
         res.sendStatus(200);
     }).catch((err) => {
-            if (!req.params.id) {
-                res.sendStatus(404);
+        if (!req.params.id) {
+            res.sendStatus(404);
 
-            } else {
-                res.sendStatus(500);
+        } else {
+            res.sendStatus(500);
 
-            }
-            console.error('something went wrong', err);
-        });
+        }
+        console.error('something went wrong', err);
+    });
+});
+app.post('/generator/:id', tokenCheck, function (req, res) {
+    console.log(`we're in`);
+    const newFlow = new Flow(nameArray, 'message');
+    newFlow.start();
+
 });
 
 app.get('/generator/:id', tokenCheck, function (req, res) {
     console.log('get id', req.params.id);
+
     generator.getGenerator(collection, req.params.id, req, res).then((item) => {
         console.log('Server item', item);
         res.json({'updatedGenerator': item});
         res.sendStatus(200);
+
+
     }).catch((err) => {
         if (!req.params.id) {
             res.sendStatus(404);

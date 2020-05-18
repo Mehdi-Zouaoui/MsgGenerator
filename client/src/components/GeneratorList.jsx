@@ -67,22 +67,34 @@ class GeneratorList extends React.Component {
             )
     }
 
+    startFlow(id) {
+        axios.post('/generator/' + id).then(() => {
+            console.log('flow started')
+        }).catch(err => {
+            return err
+        })
+    }
+
     update(id) {
 
         return () => {
             this.setState({id: id})
         }
     }
-
+    redirectTo(){
+        return  <Redirect to='/generator'/>
+    }
     render() {
         return (
             <div style={{height: "100vh"}} className=" bg-dark text-center">
                 <Header/>
                 <h1 className='my-3 text-light'> Generators Liste</h1>
+                <button className="btn btn-info" onClick={this.redirectTo.bind(this)}>+</button>
                 <div>{this.state.error ? <AlertComponent/> : ''}</div>
                 {this.state.generatorsArray.length > 0 ? <Generator delete={this.deleteGenerator.bind(this)}
-                                                                array={this.state.generatorsArray}
-                                                                id={this.update.bind(this)}/>
+                                                                    array={this.state.generatorsArray}
+                                                                    id={this.update.bind(this)}
+                                                                    start={this.startFlow.bind(this)}/>
                     : <h5 className="text-light">Veuillez créer une générateur de message </h5>}
 
 
