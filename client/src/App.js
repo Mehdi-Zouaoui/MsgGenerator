@@ -18,12 +18,14 @@ class App extends React.Component {
             this.currentState = JSON.parse(stateRef).isLogged;
         }
         this.state = {
-            isLogged: stateRef ? this.currentState : false
+            isLogged: stateRef ? this.currentState : false,
+            currentRoute : null
         };
         // this.setLogged = this.setLogged.bind(this);
         // this.signOut = this.signOut.bind(this);
         console.log('logged', this.state.isLogged)
     }
+
 
     // signOut() {
     //     this.setState({isLogged: false}, () => {

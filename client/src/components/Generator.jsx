@@ -23,6 +23,10 @@ class Generator extends React.Component {
         this.props.start(id);
     }
 
+    stop(id) {
+        this.props.stop(id);
+    }
+
     update(id) {
         this.props.id(id);
         this.setState({redirect: '/generator/' + id});
@@ -44,7 +48,7 @@ class Generator extends React.Component {
 
                         <div className="col-1">{generator.socialNetworks.join('\n')}</div>
                         <div
-                            className="col-4 d-flex justify-content-center align-items-center">{generator.keywords.length > 1 ? generator.keywords.join('\n') : 'text'}</div>
+                            className="col-3 d-flex justify-content-center align-items-center">{generator.keywords.length > 1 ? generator.keywords.join('\n') : 'text'}</div>
 
                         <div className="col-2 my-auto">
                             <h5>Interval </h5>
@@ -55,7 +59,7 @@ class Generator extends React.Component {
                             <h5>Modèle </h5>
                             <div>{generator.generatorModel}</div>
                         </div>
-                        <div>
+                        <div className="col-1">
                             <button className="btn btn-info col-12 h-50"
                                     onClick={() => this.update(generator._id)}>Update
                             </button>
@@ -64,12 +68,12 @@ class Generator extends React.Component {
                                     onClick={() => this.delete(generator._id)}>Delete
                             </button>
                         </div>
-                        <div>
+                        <div className="col-1">
                             <button className="btn btn-success col-12 h-50"
                                     onClick={() => this.start(generator._id)}>Start
                             </button>
                             <button className="btn btn-warning col-12 h-50"
-                            >Stop
+                                    onClick={() => this.stop(generator._id)}>Stop
                             </button>
                         </div>
                     </div>

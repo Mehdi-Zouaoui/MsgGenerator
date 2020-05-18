@@ -191,9 +191,8 @@ class GeneratorForm extends React.Component {
         }
         return (
             <div>
-                <Header/>
                 <div>
-                    <h1 className="mx-auto my-5 col-10 text-light display-4">Formulaire de création</h1>
+                    <h1 className="mx-auto mb-5 col-10 text-light display-4">Formulaire de création</h1>
                     {/*<button onClick={this.doYouHaveCookie()}> Cookie</button>*/}
                     <form style={formStyle} method="PUT" onSubmit={this.handleSubmit}
                           className="mt-5 py-3 card col-10 bg-dark border border-info ">

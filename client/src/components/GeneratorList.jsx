@@ -68,33 +68,47 @@ class GeneratorList extends React.Component {
     }
 
     startFlow(id) {
-        axios.post('/generator/' + id).then(() => {
+        axios.get('/generator/' + id + '/start').then(() => {
             console.log('flow started')
         }).catch(err => {
             return err
         })
     }
 
-    update(id) {
+    stopFlow(id) {
+        axios.get('/generator/' + id + '/stop').then(() => {
+            console.log('flow stopped')
+        }).catch(err => {
+            return err
+        })
+    }
 
+    update(id) {
         return () => {
             this.setState({id: id})
         }
     }
+
     redirectTo(){
-        return  <Redirect to='/generator'/>
-    }
+      this.setState({redirect : '/generator'})
+    };
+
     render() {
+        if(this.state.redirect){
+            return  <Redirect to={this.state.redirect}/>
+        }
         return (
             <div style={{height: "100vh"}} className=" bg-dark text-center">
-                <Header/>
-                <h1 className='my-3 text-light'> Generators Liste</h1>
-                <button className="btn btn-info" onClick={this.redirectTo.bind(this)}>+</button>
+                <div className="row  col-6 m-auto">
+                <h1 className='mb-3 text-light col-11'> Generators Liste</h1>
+                <button className="btn btn-info col-1 mb-2" onClick={this.redirectTo.bind(this)}>+</button>
+                </div>
                 <div>{this.state.error ? <AlertComponent/> : ''}</div>
                 {this.state.generatorsArray.length > 0 ? <Generator delete={this.deleteGenerator.bind(this)}
                                                                     array={this.state.generatorsArray}
                                                                     id={this.update.bind(this)}
-                                                                    start={this.startFlow.bind(this)}/>
+                                                                    start={this.startFlow.bind(this)}
+                                                                    stop={this.stopFlow.bind(this)}/>
                     : <h5 className="text-light">Veuillez créer une générateur de message </h5>}
 
 

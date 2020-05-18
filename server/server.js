@@ -12,6 +12,7 @@ let db = null;
 let collection = null;
 const generator = require('./api/generator');
 const token = "zkjndpzkjn";
+const newFlow = new Flow(nameArray, 'message');
 app.use(cookieParser());
 app.use(bodyParser());
 app.use(timeout(100000));
@@ -28,7 +29,6 @@ function haltOnTimedout(req, res, next) {
 
 let tokenCheck = function (req, res, next) {
     if (req.cookies.token) {
-        console.log('token middleware', req.cookies.token);
         next();
     } else {
         res.sendStatus(401);
@@ -44,14 +44,14 @@ app.post('/login', function (req, res) {
     if (password === req.body.password) {
         console.log('req', req.body.password);
         res.cookie('token', token, {maxAge: 900000, httpOnly: true});
-        res.sendStatus(200).json({logged: true});
+        res.json({logged: true});
         console.log('WELCOME TO MESSAGE GENERATOR');
     } else res.status(400).send({error: 'YOUR PASSWORD IS NOT DEFINED'}); // error 500 c'est pour les erreurs inattendues côté serveur. Pour un mauvais mot de passe on met plutot : 400 ou 401. Voici là liste des code : https://fr.wikipedia.org/wiki/Liste_des_codes_HTTP
 });
 app.get('/generators', tokenCheck, function (req, res, err) {
     generator.getGenerators(collection).then((value) => {
         res.json({'generators': value});
-        res.sendStatus(200)
+        // res.sendStatus(200)
     }).catch((err) => {
         res.sendStatus(500);
         console.error(err)
@@ -59,7 +59,6 @@ app.get('/generators', tokenCheck, function (req, res, err) {
 });
 
 app.delete('/generator/:id', tokenCheck, function (req, res, err) {
-
     console.log('I receive a delete request');
     console.log(req.params.id);
 
@@ -69,7 +68,6 @@ app.delete('/generator/:id', tokenCheck, function (req, res, err) {
     }).catch((err) => {
         if (!req.params.id) {
             res.sendStatus(404);
-
         } else {
             res.sendStatus(500);
 
@@ -77,13 +75,14 @@ app.delete('/generator/:id', tokenCheck, function (req, res, err) {
         console.error('something went wrong', err);
     });
 });
-app.post('/generator/:id', tokenCheck, function (req, res) {
-    console.log(`we're in`);
-    const newFlow = new Flow(nameArray, 'message');
+app.get('/generator/:id/start', tokenCheck, function (req, res) {
+    console.log(`we're in start`);
     newFlow.start();
-
 });
-
+app.get('/generator/:id/stop', tokenCheck, function (req, res) {
+    console.log(`we're in delete`);
+    newFlow.stop();
+});
 app.get('/generator/:id', tokenCheck, function (req, res) {
     console.log('get id', req.params.id);
 
@@ -95,9 +94,13 @@ app.get('/generator/:id', tokenCheck, function (req, res) {
 
     }).catch((err) => {
         if (!req.params.id) {
-            res.sendStatus(404);
+            res.sendStatus(404).catch(err => {
+                return err
+            });
         } else {
-            res.sendStatus(500);
+            res.sendStatus(500).catch(err => {
+                return err
+            });
         }
         console.error('something went wrong', err);
     });
