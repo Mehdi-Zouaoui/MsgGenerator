@@ -1,19 +1,24 @@
-
+const MessageFactory = require('./messageFactory');
 
 class Flow {
-    constructor(authorArray, message , speed , socialNetwork) {
-        this.message = message;
+    constructor(authorArray , speed , socialNetwork , keywords , model) {
+
+
         this.authorArray = authorArray;
+        this.speed = speed;
+        this.socialNetwork = socialNetwork;
+        this.keywords = keywords;
+        this.model = model;
+        this.message = new MessageFactory(this.keywords, this.model);
         this.timeout = null;
-        console.log(this.authorArray.length);
 
     }
 
     start() {
         console.log('Flow started');
         this.author = this.authorArray[Math.floor(Math.random() * this.authorArray.length)];
-        console.log(this.author + ' / ' + this.message);
-        this.timeout = setTimeout(this.start.bind(this), 2000)
+        console.log(this.author + ' / ' + this.message.generateMessage());
+        this.timeout = setTimeout(this.start.bind(this), this.speed*1000)
     }
 
     stop() {

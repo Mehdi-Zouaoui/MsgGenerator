@@ -8,11 +8,13 @@ const database = require('./database');
 const timeout = require('connect-timeout');
 const Flow = require('./api/flow');
 const nameArray = require('./data/prenom');
+const MessageFactory = require('./api/messageFactory');
 let db = null;
 let collection = null;
 const generator = require('./api/generator');
 const token = "zkjndpzkjn";
-const newFlow = new Flow(nameArray, 'message');
+
+
 app.use(cookieParser());
 app.use(bodyParser());
 app.use(timeout(100000));
@@ -53,7 +55,7 @@ app.get('/generators', tokenCheck, function (req, res, err) {
         res.json({'generators': value});
         // res.sendStatus(200)
     }).catch((err) => {
-        res.sendStatus(500);
+        res.sendStatus(500).catch(err => console.error(err));
         console.error(err)
     });
 });
@@ -75,23 +77,11 @@ app.delete('/generator/:id', tokenCheck, function (req, res, err) {
         console.error('something went wrong', err);
     });
 });
-app.get('/generator/:id/start', tokenCheck, function (req, res) {
-    console.log(`we're in start`);
-    newFlow.start();
-});
-app.get('/generator/:id/stop', tokenCheck, function (req, res) {
-    console.log(`we're in delete`);
-    newFlow.stop();
-});
 app.get('/generator/:id', tokenCheck, function (req, res) {
     console.log('get id', req.params.id);
-
     generator.getGenerator(collection, req.params.id, req, res).then((item) => {
         console.log('Server item', item);
         res.json({'updatedGenerator': item});
-        res.sendStatus(200);
-
-
     }).catch((err) => {
         if (!req.params.id) {
             res.sendStatus(404).catch(err => {
@@ -105,6 +95,34 @@ app.get('/generator/:id', tokenCheck, function (req, res) {
         console.error('something went wrong', err);
     });
 });
+
+app.get('/generator/:id/start', tokenCheck, function (req, res) {
+    console.log(`we're in start`);
+    generator.getGenerator(collection, req.params.id, req, res).then((item) => {
+        console.log('Server item', item);
+        const newFlow = new Flow(nameArray, item.speed , item.socialNetworks , item.keywords , item.generatorModel);
+        newFlow.start();
+    }).catch((err) => {
+        if (!req.params.id) {
+            res.sendStatus(404).catch(err => {
+                return err
+            });
+        } else {
+            res.sendStatus(500).catch(err => {
+                return err
+            });
+        }
+        console.error('something went wrong', err);
+    });
+    // newFlow.start();
+
+});
+app.get('/generator/:id/stop', tokenCheck, function (req, res) {
+    console.log(`we're in delete`);
+    // const newFlow = new Flow();
+    // newFlow.stop();
+});
+
 
 app.put('/generator/:id', tokenCheck, function (req, res) {
     console.log(req.params.id);

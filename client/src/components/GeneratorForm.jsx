@@ -148,6 +148,8 @@ class GeneratorForm extends React.Component {
     // }
 
     handleSubmit(event) {
+        debugger
+        console.log(this.state.keywords);
         let stateClone = lodash.cloneDeep(this.state);
         if (this.state.keywords.length > 1) {
             stateClone.keywords = this.state.keywords.split('\n');
@@ -160,7 +162,6 @@ class GeneratorForm extends React.Component {
         if (stateClone.twitchChecked) stateClone.socialNetworks.push('twitch');
         if (stateClone.twitterChecked) stateClone.socialNetworks.push('twitter');
         this.setState({redirect: '/generators'});
-
         event.preventDefault();
         if (!this.state.updated) {
             axios.put('/generator', stateClone).then(
@@ -181,10 +182,6 @@ class GeneratorForm extends React.Component {
 
 
     render() {
-        // if (!this.props.isLogged) {
-        //     console.log(this.props.isLogged);
-        //     return <Redirect to={'/login'}/>
-        // }
 
         if (this.state.redirect) {
             return <Redirect to={this.state.redirect}/>
