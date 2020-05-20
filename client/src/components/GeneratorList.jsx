@@ -34,7 +34,7 @@ class GeneratorList extends React.Component {
 
 
     async refresh() {
-        const response = await fetch('/generators');
+        const response = await fetch('/generators').catch(err => console.log('error here ' ,err));
         const data = await response.json();
         return this.setState({generatorsArray: data.generators, error: false});
     }

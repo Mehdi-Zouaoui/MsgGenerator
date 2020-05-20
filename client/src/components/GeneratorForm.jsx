@@ -53,7 +53,6 @@ class GeneratorForm extends React.Component {
         axios.get('/generator/' + this.props.match.params.id).then((res) => {
             console.log('updateRes', res);
             let data = res.data.updatedGenerator;
-
             if (data.socialNetworks.find(socialNetwork => socialNetwork === 'facebook')) this.setState({facebookChecked: true});
             if (data.socialNetworks.find(socialNetwork => socialNetwork === 'youtube')) this.setState({youtubeChecked: true});
             if (data.socialNetworks.find(socialNetwork => socialNetwork === 'instagram')) this.setState({instagramChecked: true});
@@ -148,14 +147,10 @@ class GeneratorForm extends React.Component {
     // }
 
     handleSubmit(event) {
-        debugger
         console.log(this.state.keywords);
+        console.log(this.state.generatorModel);
         let stateClone = lodash.cloneDeep(this.state);
-        if (this.state.keywords.length > 1) {
-            stateClone.keywords = this.state.keywords.split('\n');
 
-            console.log('Clone ici ', stateClone.keywords);
-        }
         if (stateClone.facebookChecked) stateClone.socialNetworks.push('facebook');
         if (stateClone.youtubeChecked) stateClone.socialNetworks.push('youtube');
         if (stateClone.instagramChecked) stateClone.socialNetworks.push('instagram');
@@ -258,7 +253,7 @@ class GeneratorForm extends React.Component {
                                     <div className="card-header bg-info h5 text-light">KeyWords</div>
                                     <textarea className="form-control" id="exampleFormControlTextarea1"
                                               placeholder={'keyword' + '\n' + 'keyword'}
-                                              value={this.state.keywords} onChange={this.changeKeywords} rows="3"/>
+                                              value={this.state.keywords.toString().split(',').join('\n')} onChange={this.changeKeywords} rows="3"/>
 
                                 </div>
                             </div>
@@ -284,7 +279,7 @@ class GeneratorForm extends React.Component {
                                     <div className="card-header bg-info h5 text-light">Modèle de commentaires</div>
                                     <textarea className="form-control" id="exampleFormControlTextarea1"
                                               placeholder='[word][number]'
-                                              value={this.state.generatorModel} onChange={this.changeModel} rows="3"/>
+                                              value={this.state.generatorModel.toString().split(',').join('\n')} onChange={this.changeModel} rows="3"/>
 
                                 </div>
                             </div>

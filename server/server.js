@@ -100,7 +100,7 @@ app.get('/generator/:id/start', tokenCheck, function (req, res) {
     console.log(`we're in start`);
     generator.getGenerator(collection, req.params.id, req, res).then((item) => {
         console.log('Server item', item);
-        const newFlow = new Flow(nameArray, item.speed , item.socialNetworks , item.keywords , item.generatorModel);
+        const newFlow = new Flow(nameArray, item.speed , item.socialNetworks , item.keywords , item.generatorModel , item.minNumber , item.maxNumber);
         newFlow.start();
     }).catch((err) => {
         if (!req.params.id) {
@@ -119,8 +119,7 @@ app.get('/generator/:id/start', tokenCheck, function (req, res) {
 });
 app.get('/generator/:id/stop', tokenCheck, function (req, res) {
     console.log(`we're in delete`);
-    // const newFlow = new Flow();
-    // newFlow.stop();
+
 });
 
 
