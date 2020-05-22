@@ -4,6 +4,7 @@ import Generator from './Generator'
 import AlertComponent from "./AlertComponent";
 import {Redirect} from "react-router-dom";
 import Header from "./Header";
+import auth from "./auth";
 
 
 const lodash = require('lodash');
@@ -24,7 +25,11 @@ class GeneratorList extends React.Component {
     }
 
     componentDidUpdate() {
-        this.refresh()
+        this.refresh();
+        if (!window.localStorage.logged) {
+            this.setState({redirect: './login'});
+            this.refresh();
+        }
     }
 
     componentDidMount() {
@@ -34,10 +39,27 @@ class GeneratorList extends React.Component {
 
 
     async refresh() {
-        const response = await fetch('/generators').catch(err => console.log('error here ' ,err));
-        const data = await response.json();
-        return this.setState({generatorsArray: data.generators, error: false});
+        let success = false ;
+        const response = await fetch('/generators').then((res) => {
+            if (res.status === 401) {
+                auth.logout();
+                this.setState({redirect: './login'})
+            }
+            if(res.status === 200){
+               success = true;
+               return res
+            }
+        });
+        if(success){
+            const data = await response.json();
+            return this.setState({generatorsArray: data.generators, error: false});
+        }else {
+            console.log(`Something went wrong`)
+        }
+
+
     }
+
 
     deleteGenerator(id) {
         let clone = lodash.cloneDeep(this.state.generatorsArray);
@@ -89,19 +111,20 @@ class GeneratorList extends React.Component {
         }
     }
 
-    redirectTo(){
-      this.setState({redirect : '/generator'})
-    };
+    redirectTo() {
+        this.setState({redirect: '/generator'})
+    }
+    ;
 
     render() {
-        if(this.state.redirect){
-            return  <Redirect to={this.state.redirect}/>
+        if (this.state.redirect) {
+            return <Redirect to={this.state.redirect}/>
         }
         return (
             <div style={{height: "100vh"}} className=" bg-dark text-center">
                 <div className="row  col-6 m-auto">
-                <h1 className='mb-3 text-light col-11'> Generators Liste</h1>
-                <button className="btn btn-info col-1 mb-2" onClick={this.redirectTo.bind(this)}>+</button>
+                    <h1 className='mb-3 text-light col-11'> Generators Liste</h1>
+                    <button className="btn btn-info col-1 mb-2" onClick={this.redirectTo.bind(this)}>+</button>
                 </div>
                 <div>{this.state.error ? <AlertComponent/> : ''}</div>
                 {this.state.generatorsArray.length > 0 ? <Generator delete={this.deleteGenerator.bind(this)}

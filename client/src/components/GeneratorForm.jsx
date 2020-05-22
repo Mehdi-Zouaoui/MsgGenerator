@@ -148,14 +148,16 @@ class GeneratorForm extends React.Component {
 
     handleSubmit(event) {
         console.log(this.state.keywords);
-        console.log(this.state.generatorModel);
         let stateClone = lodash.cloneDeep(this.state);
+
 
         if (stateClone.facebookChecked) stateClone.socialNetworks.push('facebook');
         if (stateClone.youtubeChecked) stateClone.socialNetworks.push('youtube');
         if (stateClone.instagramChecked) stateClone.socialNetworks.push('instagram');
         if (stateClone.twitchChecked) stateClone.socialNetworks.push('twitch');
         if (stateClone.twitterChecked) stateClone.socialNetworks.push('twitter');
+        console.log(stateClone);
+        debugger
         this.setState({redirect: '/generators'});
         event.preventDefault();
         if (!this.state.updated) {

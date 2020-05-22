@@ -48,7 +48,7 @@ class Generator extends React.Component {
 
                         <div className="col-1">{generator.socialNetworks.join('\n')}</div>
                         <div
-                            className="col-3 d-flex justify-content-center align-items-center">{generator.keywords.length > 1 ? generator.keywords.join('\n') : 'text'}</div>
+                            className="col-3 d-flex justify-content-center align-items-center">{generator.keywords.length > 1 ? generator.keywords : 'text'}</div>
 
                         <div className="col-2 my-auto">
                             <h5>Interval </h5>

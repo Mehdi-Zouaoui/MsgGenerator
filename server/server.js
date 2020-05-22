@@ -55,7 +55,7 @@ app.get('/generators', tokenCheck, function (req, res, err) {
         res.json({'generators': value});
         // res.sendStatus(200)
     }).catch((err) => {
-        res.sendStatus(500).catch(err => console.error(err));
+        res.sendStatus(500).catch((err) => console.error(err));
         console.error(err)
     });
 });
