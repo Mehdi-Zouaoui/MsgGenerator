@@ -1,6 +1,5 @@
 import React from "react";
 import axios from 'axios';
-import App from "../App";
 import {Redirect} from "react-router-dom";
 import auth from "./auth";
 
@@ -40,7 +39,6 @@ class LoginForm extends React.Component {
     }
 
     render() {
-
         if (this.state.redirect) {
             return <Redirect to={this.state.redirect}/>
         }

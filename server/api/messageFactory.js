@@ -6,8 +6,6 @@
         this.min = minNumber;
         this.max = maxNumber;
         this.generatedMessage = '';
-        console.log(this.keywords);
-        console.log('model'  , this.model);
     }
 
     generateMessage() {

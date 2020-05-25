@@ -9,12 +9,10 @@ const timeout = require('connect-timeout');
 const Flow = require('./api/flow');
 const flows = [];
 const nameArray = require('./data/prenom');
-const MessageFactory = require('./api/messageFactory');
 let db = null;
 let collection = null;
 const generator = require('./api/generator');
 const token = "zkjndpzkjn";
-
 
 app.use(cookieParser());
 app.use(bodyParser());
@@ -39,7 +37,6 @@ let tokenCheck = function (req, res, next) {
     }
 };
 
-
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
 app.post('/login', function (req, res) {
@@ -51,10 +48,10 @@ app.post('/login', function (req, res) {
         console.log('WELCOME TO MESSAGE GENERATOR');
     } else res.status(400).send({error: 'YOUR PASSWORD IS NOT DEFINED'}); // error 500 c'est pour les erreurs inattendues côté serveur. Pour un mauvais mot de passe on met plutot : 400 ou 401. Voici là liste des code : https://fr.wikipedia.org/wiki/Liste_des_codes_HTTP
 });
+
 app.get('/generators', tokenCheck, function (req, res, err) {
     generator.getGenerators(collection).then((value) => {
         res.json({'generators': value});
-        // res.sendStatus(200)
     }).catch((err) => {
         res.sendStatus(500).catch((err) => console.error(err));
         console.error(err)
@@ -116,7 +113,6 @@ app.get('/generator/:id/start', tokenCheck, function (req, res) {
         }
         console.error('something went wrong', err);
     });
-    // newFlow.start();
 
 });
 app.get('/generator/:id/stop', tokenCheck, function (req, res) {
@@ -124,7 +120,6 @@ app.get('/generator/:id/stop', tokenCheck, function (req, res) {
     const flow = flows.filter(item => item.id === req.params.id)[0];
     flow.stop();
 });
-
 
 app.put('/generator/:id', tokenCheck, function (req, res) {
     console.log(req.params.id);

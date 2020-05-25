@@ -3,7 +3,6 @@ import axios from 'axios'
 import Generator from './Generator'
 import AlertComponent from "./AlertComponent";
 import {Redirect} from "react-router-dom";
-import Header from "./Header";
 import auth from "./auth";
 
 
@@ -37,7 +36,6 @@ class GeneratorList extends React.Component {
         console.log(this.state.generatorsArray)
     }
 
-
     async refresh() {
         let success = false ;
         const response = await fetch('/generators').then((res) => {
@@ -56,10 +54,7 @@ class GeneratorList extends React.Component {
         }else {
             console.log(`Something went wrong`)
         }
-
-
     }
-
 
     deleteGenerator(id) {
         let clone = lodash.cloneDeep(this.state.generatorsArray);
@@ -113,8 +108,7 @@ class GeneratorList extends React.Component {
 
     redirectTo() {
         this.setState({redirect: '/generator'})
-    }
-    ;
+    };
 
     render() {
         if (this.state.redirect) {
@@ -133,8 +127,6 @@ class GeneratorList extends React.Component {
                                                                     start={this.startFlow.bind(this)}
                                                                     stop={this.stopFlow.bind(this)}/>
                     : <h5 className="text-light">Veuillez créer une générateur de message </h5>}
-
-
             </div>
         );
     }

@@ -1,8 +1,5 @@
 import React from "react";
 import {Redirect} from "react-router-dom";
-import AlertComponent from "./AlertComponent";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faHome} from "@fortawesome/free-solid-svg-icons";
 
 const styles = {
     col: {
@@ -39,9 +36,7 @@ class Generator extends React.Component {
     }
 
     render() {
-        // if(!this.props.isLogged){
-        //     return <Redirect to={'/login'}/>
-        // }
+
         if (this.state.redirect) {
             return <Redirect to={this.state.redirect}/>
         }

@@ -1,7 +1,6 @@
-import React, {useState} from "react";
+import React from "react";
 import axios from "axios";
 import {Redirect} from "react-router-dom";
-import Header from "./Header";
 
 const lodash = require('lodash');
 
@@ -10,10 +9,6 @@ const formStyle = {
     display: 'flex',
     alignItems: 'center',
     margin: 'auto'
-};
-
-const borders = {
-    borderWidth: "3px"
 };
 
 class GeneratorForm extends React.Component {
@@ -37,7 +32,6 @@ class GeneratorForm extends React.Component {
             generatorModel: ''
         };
 
-        // this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.changeName = this.changeName.bind(this);
         this.changeKeywords = this.changeKeywords.bind(this);
@@ -45,7 +39,6 @@ class GeneratorForm extends React.Component {
         this.changeModel = this.changeModel.bind(this);
         this.onMinChange = this.onMinChange.bind(this);
         this.onMaxChange = this.onMaxChange.bind(this);
-        // this.handleChecked = this.handleChecked.bind(this);
     }
 
     getGeneratorWithId() {
@@ -141,24 +134,17 @@ class GeneratorForm extends React.Component {
         this.setState({twitterChecked: !this.state.twitterChecked})
     }
 
-    // handleChecked() {
-    //     this.setState({isChecked: !this.state.isChecked});
-    // }
-
     handleSubmit(event) {
-        console.log(this.state.keywords);
         let stateClone = lodash.cloneDeep(this.state);
-
 
         if (stateClone.facebookChecked) stateClone.socialNetworks.push('facebook');
         if (stateClone.youtubeChecked) stateClone.socialNetworks.push('youtube');
         if (stateClone.instagramChecked) stateClone.socialNetworks.push('instagram');
         if (stateClone.twitchChecked) stateClone.socialNetworks.push('twitch');
         if (stateClone.twitterChecked) stateClone.socialNetworks.push('twitter');
-        console.log(stateClone);
-        debugger
         this.setState({redirect: '/generators'});
         event.preventDefault();
+
         if (!this.state.updated) {
             axios.put('/generator', stateClone).then(
                 res => {
@@ -169,7 +155,6 @@ class GeneratorForm extends React.Component {
             axios.put('/generator/' + this.props.match.params.id, stateClone).then(
                 res => {
                     console.log('Generator res', res);
-
                 }
             ).catch(err => console.log(err))
         }
@@ -178,7 +163,6 @@ class GeneratorForm extends React.Component {
 
 
     render() {
-
         if (this.state.redirect) {
             return <Redirect to={this.state.redirect}/>
         }
@@ -186,14 +170,8 @@ class GeneratorForm extends React.Component {
             <div>
                 <div>
                     <h1 className="mx-auto mb-5 col-10 text-light display-4">Formulaire de création</h1>
-                    {/*<button onClick={this.doYouHaveCookie()}> Cookie</button>*/}
                     <form style={formStyle} method="PUT" onSubmit={this.handleSubmit}
                           className="mt-5 py-3 card col-10 bg-dark border border-info ">
-                        {/*<FormHeader*/}
-                        {/*<Options/>*/}
-                        {/*<Config/>*/}
-
-
                         <div className="row col-6">
                             <label htmlFor="name" className="h3 text-light ">Nom du Generateur</label>
                             <input type="text" id='name' className="form-control" onChange={this.changeName}
@@ -254,11 +232,11 @@ class GeneratorForm extends React.Component {
                                     <div className="card-header bg-info h5 text-light">KeyWords</div>
                                     <textarea className="form-control" id="exampleFormControlTextarea1"
                                               placeholder={'keyword' + '\n' + 'keyword'}
-                                              value={this.state.keywords.toString().split(',').join('\n')} onChange={this.changeKeywords} rows="3"/>
+                                              value={this.state.keywords.toString().split(',').join('\n')}
+                                              onChange={this.changeKeywords} rows="3"/>
 
                                 </div>
                             </div>
-
 
                             <div className="col-6 mt-2">
                                 <div className="form-group col-12 text-light">
@@ -279,12 +257,11 @@ class GeneratorForm extends React.Component {
                                 <div className="card ">
                                     <div className="card-header bg-info h5 text-light">Modèle de commentaires</div>
                                     <textarea className="form-control" id="exampleFormControlTextarea1"
-                                              placeholder='[word][number]'
-                                              value={this.state.generatorModel.toString().split(',').join('\n')} onChange={this.changeModel} rows="3"/>
-
+                                              placeholder={'[word]' + '\n' + '[number]'}
+                                              value={this.state.generatorModel.toString().split(',').join('\n')}
+                                              onChange={this.changeModel} rows="3"/>
                                 </div>
                             </div>
-
                         </div>
                         <input className="btn mt-3 btn-info col-2 " type="submit" value="Envoyer"/>
                     </form>

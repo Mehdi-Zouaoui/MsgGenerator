@@ -1,4 +1,3 @@
-
 class Auth {
     constructor() {
         this.logged = window.localStorage.getItem('logged');
