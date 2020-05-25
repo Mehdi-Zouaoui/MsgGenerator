@@ -7,6 +7,7 @@ const password = "CliclicTV";
 const database = require('./database');
 const timeout = require('connect-timeout');
 const Flow = require('./api/flow');
+const flows = [];
 const nameArray = require('./data/prenom');
 const MessageFactory = require('./api/messageFactory');
 let db = null;
@@ -100,8 +101,9 @@ app.get('/generator/:id/start', tokenCheck, function (req, res) {
     console.log(`we're in start`);
     generator.getGenerator(collection, req.params.id, req, res).then((item) => {
         console.log('Server item', item);
-        const newFlow = new Flow(nameArray, item.speed , item.socialNetworks , item.keywords , item.generatorModel , item.minNumber , item.maxNumber);
+        const newFlow = new Flow(req.params.id, nameArray, item.speed, item.socialNetworks, item.keywords, item.generatorModel, item.minNumber, item.maxNumber);
         newFlow.start();
+        flows.push(newFlow)
     }).catch((err) => {
         if (!req.params.id) {
             res.sendStatus(404).catch(err => {
@@ -118,8 +120,9 @@ app.get('/generator/:id/start', tokenCheck, function (req, res) {
 
 });
 app.get('/generator/:id/stop', tokenCheck, function (req, res) {
-    console.log(`we're in delete`);
-
+    console.log(`we're in stop`);
+    const flow = flows.filter(item => item.id === req.params.id)[0];
+    flow.stop();
 });
 
 

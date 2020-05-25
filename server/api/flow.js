@@ -1,8 +1,8 @@
 const MessageFactory = require('./messageFactory');
 
 class Flow {
-    constructor(authorArray , speed , socialNetwork , keywords , model , minNumber , maxNumber) {
-
+    constructor( id , authorArray , speed , socialNetwork , keywords , model , minNumber , maxNumber) {
+        this.id = id ;
         this.minNumber = minNumber;
         this.maxNumber = maxNumber;
         this.authorArray = authorArray;

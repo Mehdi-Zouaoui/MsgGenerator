@@ -9,7 +9,6 @@ const lodash = require('lodash');
 const formStyle = {
     display: 'flex',
     alignItems: 'center',
-
     margin: 'auto'
 };
 
