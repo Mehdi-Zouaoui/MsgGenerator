@@ -17,14 +17,13 @@ class Flow {
 
     start() {
         this.author = this.authorArray[Math.floor(Math.random() * this.authorArray.length)];
-        console.log(this.author + ' / ' + this.message.generateMessage());
+        console.log(this.author + ' says :  ' + this.message.generateMessage());
         this.timeout = setTimeout(this.start.bind(this), (60000/this.speed));
-
     }
 
     stop() {
         clearTimeout(this.timeout);
-        console.log('Flow stopped');
+        console.log(`Flow ${this.id} stopped`);
     }
 }
 

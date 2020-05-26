@@ -29,9 +29,7 @@ function updateGenerator(collection, id, objectUpdated) {
     }).catch((err) => {
         console.error('failed with error', err);
         throw err
-
     });
-
 }
 
 function deleteGenerator(collection, id) {

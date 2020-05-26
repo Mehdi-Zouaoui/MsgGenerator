@@ -7,7 +7,7 @@ const password = "CliclicTV";
 const database = require('./database');
 const timeout = require('connect-timeout');
 const Flow = require('./api/flow');
-const flows = [];
+let flows = [];
 const nameArray = require('./data/prenom');
 let db = null;
 let collection = null;
@@ -64,6 +64,9 @@ app.delete('/generator/:id', tokenCheck, function (req, res, err) {
 
     generator.deleteGenerator(collection, req.params.id).then((item) => {
         console.log(item);
+        flows = flows.filter(function(item){
+            return item.id !== req.params.id;
+        });
         res.sendStatus(200);
     }).catch((err) => {
         if (!req.params.id) {
@@ -117,8 +120,14 @@ app.get('/generator/:id/start', tokenCheck, function (req, res) {
 });
 app.get('/generator/:id/stop', tokenCheck, function (req, res) {
     console.log(`we're in stop`);
-    const flow = flows.filter(item => item.id === req.params.id)[0];
-    flow.stop();
+    console.log('All the flows' , flows);
+    const currentFlow = flows.filter(item => item.id === req.params.id)[0];
+    currentFlow.stop();
+    flows = flows.filter(function(item){
+        return item.id !== req.params.id;
+    });
+    console.log('All the flows' , flows);
+
 });
 
 app.put('/generator/:id', tokenCheck, function (req, res) {

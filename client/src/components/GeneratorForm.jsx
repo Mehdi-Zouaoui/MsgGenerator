@@ -4,7 +4,6 @@ import {Redirect} from "react-router-dom";
 
 const lodash = require('lodash');
 
-
 const formStyle = {
     display: 'flex',
     alignItems: 'center',
