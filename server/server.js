@@ -17,16 +17,13 @@ const token = "zkjndpzkjn";
 app.use(cookieParser());
 app.use(bodyParser());
 app.use(timeout(100000));
-app.use(haltOnTimedout);
 
 database.connect().then((client) => {
     db = client.db;
     collection = client.collection;
 });
 
-function haltOnTimedout(req, res, next) {
-    if (!req.timedout) next();
-}
+
 
 let tokenCheck = function (req, res, next) {
     if (req.cookies.token) {
@@ -64,6 +61,8 @@ app.delete('/generator/:id', tokenCheck, function (req, res, err) {
 
     generator.deleteGenerator(collection, req.params.id).then((item) => {
         console.log(item);
+        const currentFlow = flows.filter(item => item.id === req.params.id)[0];
+        if(currentFlow) currentFlow.stop();
         flows = flows.filter(function(item){
             return item.id !== req.params.id;
         });
@@ -103,7 +102,8 @@ app.get('/generator/:id/start', tokenCheck, function (req, res) {
         console.log('Server item', item);
         const newFlow = new Flow(req.params.id, nameArray, item.speed, item.socialNetworks, item.keywords, item.generatorModel, item.minNumber, item.maxNumber);
         newFlow.start();
-        flows.push(newFlow)
+        flows.push(newFlow);
+        res.json({isStarted : true});
     }).catch((err) => {
         if (!req.params.id) {
             res.sendStatus(404).catch(err => {
@@ -123,10 +123,12 @@ app.get('/generator/:id/stop', tokenCheck, function (req, res) {
     console.log('All the flows' , flows);
     const currentFlow = flows.filter(item => item.id === req.params.id)[0];
     currentFlow.stop();
+    res.json({isStarted : stop});
     flows = flows.filter(function(item){
         return item.id !== req.params.id;
     });
     console.log('All the flows' , flows);
+    res.sendStatus(200)
 
 });
 

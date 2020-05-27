@@ -116,9 +116,9 @@ class GeneratorList extends React.Component {
         }
         return (
             <div style={{height: "100vh"}} className=" bg-dark text-center">
-                <div className="row col-6 m-auto">
+                <div className="row col-12 m-auto">
                     <h1 className='my-3 text-light col-10'> Generators Liste</h1>
-                    <button className=" mt-4 btn btn-info h-100 col-1 mb-2" onClick={this.redirectTo.bind(this)}>+</button>
+                    <button className=" mt-4 btn btn-info h-100 col-2 mb-2" onClick={this.redirectTo.bind(this)}>+ Générateur</button>
                 </div>
                 <div>{this.state.error ? <AlertComponent/> : ''}</div>
                 {this.state.generatorsArray.length > 0 ? <Generator  delete={this.deleteGenerator.bind(this)}

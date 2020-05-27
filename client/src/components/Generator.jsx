@@ -1,12 +1,15 @@
 import React from "react";
 import {Redirect} from "react-router-dom";
-
+import $ from "jquery"
 const styles = {
     col: {
         paddingLeft: 0,
         paddingRight: 0
     }
 };
+$('#deleteModal').on('shown.bs.modal', function () {
+    $('#myInput').trigger('focus')
+});
 
 class Generator extends React.Component {
     constructor(props) {
@@ -68,6 +71,36 @@ class Generator extends React.Component {
                             <button className="btn btn-danger col-12 h-50"
                                     onClick={() => this.delete(generator._id)}>Delete
                             </button>
+
+                            {/*<button type="button" id="myInput" className="btn btn-danger col-12 h-50"*/}
+                            {/*        data-toggle="modal" data-target="#deleteModal"*/}
+                            {/*       >Delete*/}
+                            {/*</button>*/}
+
+                            {/*<div className="modal fade" id="deleteModal" tabIndex="-1" role="dialog"*/}
+                            {/*     aria-labelledby="exampleModalLabel" aria-hidden="true">*/}
+                            {/*    <div className="modal-dialog" role="document">*/}
+                            {/*        <div className="modal-content">*/}
+                            {/*            <div className="modal-header">*/}
+                            {/*                <h5 className="modal-title" id="exampleModalLabel">Modal title</h5>*/}
+                            {/*                <button type="button" className="close" data-dismiss="modal"*/}
+                            {/*                        aria-label="Close">*/}
+                            {/*                    <span aria-hidden="true">&times;</span>*/}
+                            {/*                </button>*/}
+                            {/*            </div>*/}
+                            {/*            <div className="modal-body">*/}
+                            {/*                ...*/}
+                            {/*            </div>*/}
+                            {/*            <div className="modal-footer">*/}
+                            {/*                <button type="button" className="btn btn-secondary"*/}
+                            {/*                        data-dismiss="modal">Close*/}
+                            {/*                </button>*/}
+                            {/*                <button type="button" className="btn btn-primary">Save changes</button>*/}
+                            {/*            </div>*/}
+                            {/*        </div>*/}
+                            {/*    </div>*/}
+                            {/*</div>*/}
+
                         </div>
                         <div className="col-1 border" style={styles.col}>
                             <button className="btn btn-success col-12 h-50"
