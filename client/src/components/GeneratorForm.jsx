@@ -1,6 +1,8 @@
 import React from "react";
 import axios from "axios";
 import {Redirect} from "react-router-dom";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faArrowAltCircleLeft} from "@fortawesome/free-solid-svg-icons";
 
 const lodash = require('lodash');
 
@@ -31,6 +33,7 @@ class GeneratorForm extends React.Component {
             generatorModel: ''
         };
 
+
         this.handleSubmit = this.handleSubmit.bind(this);
         this.changeName = this.changeName.bind(this);
         this.changeKeywords = this.changeKeywords.bind(this);
@@ -39,6 +42,9 @@ class GeneratorForm extends React.Component {
         this.onMinChange = this.onMinChange.bind(this);
         this.onMaxChange = this.onMaxChange.bind(this);
     }
+    redirectTo() {
+        this.setState({redirect: '/generators'})
+    };
 
     getGeneratorWithId() {
         axios.get('/generator/' + this.props.match.params.id).then((res) => {
@@ -133,6 +139,7 @@ class GeneratorForm extends React.Component {
         this.setState({twitterChecked: !this.state.twitterChecked})
     }
 
+
     handleSubmit(event) {
         let stateClone = lodash.cloneDeep(this.state);
 
@@ -167,8 +174,12 @@ class GeneratorForm extends React.Component {
         }
         return (
             <div>
+
                 <div>
-                    <h1 className="mx-auto mb-5 col-10 text-light display-4">Formulaire de création</h1>
+                    <div className="row col-12 text-center m-auto my-5">
+                    <h1 className="  col-10 text-light display-4">Formulaire de création</h1>
+                        <button className="mt-4 btn btn-warning h-100 col-1" onClick={this.redirectTo.bind(this)}> <FontAwesomeIcon style={{color : 'white'}} icon={faArrowAltCircleLeft} /></button>
+                    </div>
                     <form style={formStyle} method="PUT" onSubmit={this.handleSubmit}
                           className="mt-5 py-3 card col-10 bg-dark border border-info ">
                         <div className="row col-6">
