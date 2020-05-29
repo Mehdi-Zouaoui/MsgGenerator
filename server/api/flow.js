@@ -13,7 +13,6 @@ class Flow {
         this.model = model.split('\n');
         this.message = new MessageFactory(this.keywords, this.model , this.minNumber , this.maxNumber);
         this.timeout = null;
-        console.log('flow model' ,this.model);
     }
 
     start() {

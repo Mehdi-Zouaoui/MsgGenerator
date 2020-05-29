@@ -176,7 +176,7 @@ class GeneratorForm extends React.Component {
             <div>
 
                 <div>
-                    <div className="row col-12 text-center m-auto my-5">
+                    <div className="row col-12 d-flex justify-content-center text-center m-auto my-5">
                     <h1 className="  col-10 text-light display-4">Formulaire de création</h1>
                         <button className="mt-4 btn btn-warning h-100 col-1" onClick={this.redirectTo.bind(this)}> <FontAwesomeIcon style={{color : 'white'}} icon={faArrowAltCircleLeft} /></button>
                     </div>

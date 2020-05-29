@@ -3,8 +3,8 @@ import {Redirect} from "react-router-dom";
 import $ from "jquery";
 import DeleteModal from "./Modal";
 import {faTrash, faEdit} from "@fortawesome/free-solid-svg-icons";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ControlButton from "./ControlButton";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 const styles = {
     col: {
@@ -55,7 +55,7 @@ class Generator extends React.Component {
 
                         <div className="col-1 border">{generator.socialNetworks.join('\n')}</div>
                         <div
-                            className="col-3 d-flex bg-light  border justify-content-center align-items-center">{generator.keywords.length > 1 ? generator.keywords : 'text'}</div>
+                            className="col-4 d-flex bg-light  border justify-content-center align-items-center">{generator.keywords.length > 1 ? generator.keywords : 'text'}</div>
 
                         <div className="col-2 border">
                             <h5>Interval </h5>
@@ -66,22 +66,20 @@ class Generator extends React.Component {
                             <h5>Modèle </h5>
                             <div>{generator.generatorModel}</div>
                         </div>
-                        <div className="col-1 border" style={styles.col}>
-                            <button className="btn btn-info col-12 h-50"
-                                    onClick={() => this.update(generator._id)}><FontAwesomeIcon style={{color : 'white'}} icon={faEdit} />
-                            </button>
+                        <div className="col-1 d-flex border" style={styles.col}>
+                            <div style={{paddingRight : 0 , paddingLeft : 0}} className='col-6 d-flex flex-column'>
+                                <button className="btn btn-info  h-50"
+                                        onClick={() => this.update(generator._id)}><FontAwesomeIcon
+                                    style={{color: 'white'}}
+                                    icon={faEdit}/>
+                                </button>
 
-                            <DeleteModal delete={this.delete.bind(this)} id={generator._id}/>
+                                <DeleteModal delete={this.delete.bind(this)} id={generator._id}/>
+                            </div>
 
-                        </div>
-                        <div className="col-1 border" style={styles.col}>
-                            <button className="btn btn-success col-12 h-50"
-                                    onClick={() => this.start(generator._id)}>Start
-                            </button>
-                            <button className="btn btn-warning col-12 h-50"
-                                    onClick={() => this.stop(generator._id)}>
-                                Update
-                            </button>
+                            <ControlButton stop={this.stop.bind(this)} start={this.start.bind(this)}
+                                           id={generator._id}/>
+
                         </div>
                     </div>
                 </li>

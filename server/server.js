@@ -24,7 +24,6 @@ database.connect().then((client) => {
 });
 
 
-
 let tokenCheck = function (req, res, next) {
     if (req.cookies.token) {
         next();
@@ -34,7 +33,16 @@ let tokenCheck = function (req, res, next) {
     }
 };
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+app.listen(port, function () {
+
+    console.log(`Listening on port ${port}`);
+    console.log(flows)
+    // flows.forEach(flow => {
+    //     if (flow.isStarted) {
+    //         flow.start();
+    //     }
+    // })
+});
 
 app.post('/login', function (req, res) {
     console.log('password', req.body.password);
@@ -62,8 +70,8 @@ app.delete('/generator/:id', tokenCheck, function (req, res, err) {
     generator.deleteGenerator(collection, req.params.id).then((item) => {
         console.log(item);
         const currentFlow = flows.filter(item => item.id === req.params.id)[0];
-        if(currentFlow) currentFlow.stop();
-        flows = flows.filter(function(item){
+        if (currentFlow) currentFlow.stop();
+        flows = flows.filter(function (item) {
             return item.id !== req.params.id;
         });
         res.sendStatus(200);
@@ -102,8 +110,10 @@ app.get('/generator/:id/start', tokenCheck, function (req, res) {
         console.log('Server item', item);
         const newFlow = new Flow(req.params.id, nameArray, item.speed, item.socialNetworks, item.keywords, item.generatorModel, item.minNumber, item.maxNumber);
         newFlow.start();
+        // const alreadyIn = flows.find(flow => flow.id === newFlow.id);
+        // if (!alreadyIn) flows.push(newFlow);
         flows.push(newFlow);
-        res.json({isStarted : true});
+        // res.json({isStarted: true});
     }).catch((err) => {
         if (!req.params.id) {
             res.sendStatus(404).catch(err => {
@@ -120,14 +130,14 @@ app.get('/generator/:id/start', tokenCheck, function (req, res) {
 });
 app.get('/generator/:id/stop', tokenCheck, function (req, res) {
     console.log(`we're in stop`);
-    console.log('All the flows' , flows);
+    console.log('All the flows', flows);
     const currentFlow = flows.filter(item => item.id === req.params.id)[0];
     currentFlow.stop();
-    res.json({isStarted : stop});
-    flows = flows.filter(function(item){
+    // res.json({isStarted : stop});
+    flows = flows.filter(function (item) {
         return item.id !== req.params.id;
     });
-    console.log('All the flows' , flows);
+    console.log('All the flows', flows);
     res.sendStatus(200)
 
 });
