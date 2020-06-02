@@ -1,4 +1,6 @@
+
 const express = require('express');
+const fs = require('fs').promises;
 const app = express();
 const port = process.env.PORT || 5000;
 const cookieParser = require('cookie-parser');
@@ -7,7 +9,22 @@ const password = "CliclicTV";
 const database = require('./database');
 const timeout = require('connect-timeout');
 const Flow = require('./api/flow');
+
 let flows = [];
+
+// function readWriteAsync() {
+//     fs.readFile('startedFlows.json', 'utf-8', function(err, data){
+//         if (err) throw err;
+//
+//         var newValue = data.replace(/^\./gim, 'myString');
+//
+//         fs.writeFile('filelistAsync.txt', newValue, 'utf-8', function (err) {
+//             if (err) throw err;
+//             console.log('filelistAsync complete');
+//         });
+//     });
+// }
+
 const nameArray = require('./data/prenom');
 let db = null;
 let collection = null;
@@ -34,14 +51,19 @@ let tokenCheck = function (req, res, next) {
 };
 
 app.listen(port, function () {
-
+    let restartFlows = [];
     console.log(`Listening on port ${port}`);
-    console.log(flows)
-    // flows.forEach(flow => {
-    //     if (flow.isStarted) {
-    //         flow.start();
-    //     }
-    // })
+    console.log('mes flows' , flows);
+    fs.readFile('startedFlows.json', (err , data) => {
+        if(err){
+            throw err;
+        }
+        restartFlows = data
+    })
+    restartFlows.forEach(flow => {
+        flow.start();
+    })
+
 });
 
 app.post('/login', function (req, res) {
@@ -106,14 +128,18 @@ app.get('/generator/:id', tokenCheck, function (req, res) {
 
 app.get('/generator/:id/start', tokenCheck, function (req, res) {
     console.log(`we're in start`);
+    // fs.writeFile('startedFlows.json', JSON.stringify(flows))
+    //     .then((r => console.log('the file has been saved', r))
+    //         .catch(err => console.error('error when save' , err))
+    //     )
+
     generator.getGenerator(collection, req.params.id, req, res).then((item) => {
         console.log('Server item', item);
+
         const newFlow = new Flow(req.params.id, nameArray, item.speed, item.socialNetworks, item.keywords, item.generatorModel, item.minNumber, item.maxNumber);
         newFlow.start();
-        // const alreadyIn = flows.find(flow => flow.id === newFlow.id);
-        // if (!alreadyIn) flows.push(newFlow);
         flows.push(newFlow);
-        // res.json({isStarted: true});
+
     }).catch((err) => {
         if (!req.params.id) {
             res.sendStatus(404).catch(err => {
@@ -126,6 +152,10 @@ app.get('/generator/:id/start', tokenCheck, function (req, res) {
         }
         console.error('something went wrong', err);
     });
+    fs.writeFile('startedFlows.json', JSON.stringify(flows), (err) => {
+        if (err) throw err;
+        console.log('qdjobcv')
+    }).then(r => console.log('done')) ;
 
 });
 app.get('/generator/:id/stop', tokenCheck, function (req, res) {
