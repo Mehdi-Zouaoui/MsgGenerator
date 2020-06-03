@@ -1,6 +1,4 @@
-
 const express = require('express');
-const fs = require('fs').promises;
 const app = express();
 const port = process.env.PORT || 5000;
 const cookieParser = require('cookie-parser');
@@ -9,22 +7,7 @@ const password = "CliclicTV";
 const database = require('./database');
 const timeout = require('connect-timeout');
 const Flow = require('./api/flow');
-
-let flows = [];
-
-// function readWriteAsync() {
-//     fs.readFile('startedFlows.json', 'utf-8', function(err, data){
-//         if (err) throw err;
-//
-//         var newValue = data.replace(/^\./gim, 'myString');
-//
-//         fs.writeFile('filelistAsync.txt', newValue, 'utf-8', function (err) {
-//             if (err) throw err;
-//             console.log('filelistAsync complete');
-//         });
-//     });
-// }
-
+let flows = null;
 const nameArray = require('./data/prenom');
 let db = null;
 let collection = null;
@@ -35,9 +18,13 @@ app.use(cookieParser());
 app.use(bodyParser());
 app.use(timeout(100000));
 
-database.connect().then((client) => {
+database.connect('generators').then((client) => {
     db = client.db;
     collection = client.collection;
+});
+
+database.connect('flows').then((client) => {
+    flows = client.collection
 });
 
 
@@ -51,18 +38,8 @@ let tokenCheck = function (req, res, next) {
 };
 
 app.listen(port, function () {
-    let restartFlows = [];
     console.log(`Listening on port ${port}`);
     console.log('mes flows' , flows);
-    fs.readFile('startedFlows.json', (err , data) => {
-        if(err){
-            throw err;
-        }
-        restartFlows = data
-    })
-    restartFlows.forEach(flow => {
-        flow.start();
-    })
 
 });
 
@@ -128,10 +105,6 @@ app.get('/generator/:id', tokenCheck, function (req, res) {
 
 app.get('/generator/:id/start', tokenCheck, function (req, res) {
     console.log(`we're in start`);
-    // fs.writeFile('startedFlows.json', JSON.stringify(flows))
-    //     .then((r => console.log('the file has been saved', r))
-    //         .catch(err => console.error('error when save' , err))
-    //     )
 
     generator.getGenerator(collection, req.params.id, req, res).then((item) => {
         console.log('Server item', item);
@@ -152,10 +125,6 @@ app.get('/generator/:id/start', tokenCheck, function (req, res) {
         }
         console.error('something went wrong', err);
     });
-    fs.writeFile('startedFlows.json', JSON.stringify(flows), (err) => {
-        if (err) throw err;
-        console.log('qdjobcv')
-    }).then(r => console.log('done')) ;
 
 });
 app.get('/generator/:id/stop', tokenCheck, function (req, res) {

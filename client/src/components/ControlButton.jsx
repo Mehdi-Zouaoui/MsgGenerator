@@ -23,12 +23,12 @@ class ControlButton extends React.Component {
 
     render() {
         return (
-            <div style={{paddingRight : 0 , paddingLeft : 0}} className="col-6">
+            <div style={{paddingRight : 0 , paddingLeft : 0}} >
                 {this.state.isStarted ?
-                    <button className="btn btn-warning  col-12 h-100 "
+                    <button className="btn h-100 mr-1 btn-ico btn-danger"
                             onClick={() => this.stopped(this.props.id)}><FontAwesomeIcon style={{color : 'white'}} icon={faPause} /></button>
                     :
-                    <button className="btn btn-success col-12 h-100"
+                    <button className="btn mr-1 btn-ico btn-success"
                             onClick={() => this.started(this.props.id)}><FontAwesomeIcon style={{color : 'white'}} icon={faPlay} /></button>
                 }
             </div>

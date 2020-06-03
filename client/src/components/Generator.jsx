@@ -55,7 +55,7 @@ class Generator extends React.Component {
 
                         <div className="col-1 border">{generator.socialNetworks.join('\n')}</div>
                         <div
-                            className="col-4 d-flex bg-light  border justify-content-center align-items-center">{generator.keywords.length > 1 ? generator.keywords : 'text'}</div>
+                            className="col-3 d-flex bg-light  border justify-content-center align-items-center">{generator.keywords.length > 1 ? generator.keywords : 'text'}</div>
 
                         <div className="col-2 border">
                             <h5>Interval </h5>
@@ -66,19 +66,20 @@ class Generator extends React.Component {
                             <h5>Modèle </h5>
                             <div>{generator.generatorModel}</div>
                         </div>
-                        <div className="col-1 d-flex border" style={styles.col}>
-                            <div style={{paddingRight : 0 , paddingLeft : 0}} className='col-6 d-flex flex-column'>
-                                <button className="btn btn-info  h-50"
+                        <div className="col-2 d-flex flex-column justify-content-center align-items-center border" style={styles.col}>
+                            <div style={{paddingRight : 0 , paddingLeft : 0}} className=' d-flex  '>
+                                <button className="btn mr-1 h-100 btn-ico btn-outline-secondary"
                                         onClick={() => this.update(generator._id)}><FontAwesomeIcon
-                                    style={{color: 'white'}}
-                                    icon={faEdit}/>
+                                    icon={faEdit}
+                              />
                                 </button>
 
                                 <DeleteModal delete={this.delete.bind(this)} id={generator._id}/>
+                                <ControlButton stop={this.stop.bind(this)} start={this.start.bind(this)}
+                                               id={generator._id}/>
                             </div>
 
-                            <ControlButton stop={this.stop.bind(this)} start={this.start.bind(this)}
-                                           id={generator._id}/>
+
 
                         </div>
                     </div>

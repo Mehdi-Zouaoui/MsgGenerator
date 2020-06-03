@@ -26,8 +26,8 @@ class DeleteModal extends React.Component {
     render() {
         return (
             <>
-                <Button variant="btn btn-danger h-50" onClick={this.handleShow.bind(this)}>
-                    <FontAwesomeIcon style={{color : 'white'}} icon={faTrash} />
+                <Button variant="btn mr-1 h-100 btn-ico btn-outline-secondary" onClick={this.handleShow.bind(this)}>
+                    <FontAwesomeIcon icon={faTrash} />
                 </Button>
 
                 <Modal show={this.state.show} onHide={this.handleClose.bind(this)}>
