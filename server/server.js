@@ -9,8 +9,9 @@ const timeout = require('connect-timeout');
 const Flow = require('./api/flow');
 let flows = null;
 const nameArray = require('./data/prenom');
-let db = null;
+let db = [];
 let collection = null;
+let flowsCollection = null
 const generator = require('./api/generator');
 const token = "zkjndpzkjn";
 
@@ -21,11 +22,17 @@ app.use(timeout(100000));
 database.connect('generators').then((client) => {
     db = client.db;
     collection = client.collection;
+    db.createCollection('flows').then((data) => {
+        flowsCollection = data;
+    }).catch((err) => {
+        console.log(err)
+    })
+
 });
 
-database.connect('flows').then((client) => {
-    flows = client.collection
-});
+async function createFlow(item) {
+    return await generator.createGenerator(flowsCollection, item)
+}
 
 
 let tokenCheck = function (req, res, next) {
@@ -39,7 +46,7 @@ let tokenCheck = function (req, res, next) {
 
 app.listen(port, function () {
     console.log(`Listening on port ${port}`);
-    console.log('mes flows' , flows);
+    console.log('mes flows', flows);
 
 });
 
@@ -108,11 +115,10 @@ app.get('/generator/:id/start', tokenCheck, function (req, res) {
 
     generator.getGenerator(collection, req.params.id, req, res).then((item) => {
         console.log('Server item', item);
-
         const newFlow = new Flow(req.params.id, nameArray, item.speed, item.socialNetworks, item.keywords, item.generatorModel, item.minNumber, item.maxNumber);
         newFlow.start();
-        flows.push(newFlow);
-
+        if (!flows.includes(req.params.id)) flows.push(newFlow);
+        createFlow({id: req.params.id, isStarted: newFlow.isStarted}).then(r => console.log(r))
     }).catch((err) => {
         if (!req.params.id) {
             res.sendStatus(404).catch(err => {
@@ -132,7 +138,6 @@ app.get('/generator/:id/stop', tokenCheck, function (req, res) {
     console.log('All the flows', flows);
     const currentFlow = flows.filter(item => item.id === req.params.id)[0];
     currentFlow.stop();
-    // res.json({isStarted : stop});
     flows = flows.filter(function (item) {
         return item.id !== req.params.id;
     });
