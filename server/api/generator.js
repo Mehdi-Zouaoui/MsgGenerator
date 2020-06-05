@@ -45,12 +45,27 @@ function deleteGenerator(collection, id) {
 
         });
 }
+function deleteFlow(collection, id) {
+    console.log('deleted');
+    return collection.deleteOne({id: id})
+        .then((res) => {
+            console.log('Deleted', res);
+            return res
+        })
+        .catch((err) => {
+            console.error('failed with error', err);
+            throw err
+
+        });
+}
+
 
 module.exports = {
     getGenerators,
     deleteGenerator,
     createGenerator,
     getGenerator,
-    updateGenerator
+    updateGenerator,
+    deleteFlow
 };
 

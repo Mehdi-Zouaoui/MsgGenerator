@@ -7,7 +7,7 @@ const password = "CliclicTV";
 const database = require('./database');
 const timeout = require('connect-timeout');
 const Flow = require('./api/flow');
-let flows = null;
+let flows = [];
 const nameArray = require('./data/prenom');
 let db = [];
 let collection = null;
@@ -19,16 +19,7 @@ app.use(cookieParser());
 app.use(bodyParser());
 app.use(timeout(100000));
 
-database.connect('generators').then((client) => {
-    db = client.db;
-    collection = client.collection;
-    db.createCollection('flows').then((data) => {
-        flowsCollection = data;
-    }).catch((err) => {
-        console.log(err)
-    })
 
-});
 
 async function createFlow(item) {
     return await generator.createGenerator(flowsCollection, item)
@@ -47,6 +38,22 @@ let tokenCheck = function (req, res, next) {
 app.listen(port, function () {
     console.log(`Listening on port ${port}`);
     console.log('mes flows', flows);
+    database.connect('generators').then((client) => {
+        db = client.db;
+        collection = client.collection;
+        db.createCollection('flows').then((data) => {
+            flowsCollection = data;
+            generator.getGenerators(flowsCollection).then(dbFlows => {
+                dbFlows.forEach((dbFlow) => {
+                const flow  = new Flow(dbFlow.id, nameArray, dbFlow.speed, dbFlow.socialNetworks, dbFlow.keywords.join('\n'), dbFlow.model.join('\n'), dbFlow.minNumber, dbFlow.maxNumber);
+               flow.start();
+                })
+            })
+        }).catch((err) => {
+            console.log(err)
+        })
+
+    });
 
 });
 
@@ -61,6 +68,7 @@ app.post('/login', function (req, res) {
 });
 
 app.get('/generators', tokenCheck, function (req, res, err) {
+
     generator.getGenerators(collection).then((value) => {
         res.json({'generators': value});
     }).catch((err) => {
@@ -116,26 +124,26 @@ app.get('/generator/:id/start', tokenCheck, function (req, res) {
     generator.getGenerator(collection, req.params.id, req, res).then((item) => {
         console.log('Server item', item);
         const newFlow = new Flow(req.params.id, nameArray, item.speed, item.socialNetworks, item.keywords, item.generatorModel, item.minNumber, item.maxNumber);
+
+        createFlow(newFlow).then(r => console.log(r));
         newFlow.start();
-        if (!flows.includes(req.params.id)) flows.push(newFlow);
-        createFlow({id: req.params.id, isStarted: newFlow.isStarted}).then(r => console.log(r))
     }).catch((err) => {
         if (!req.params.id) {
-            res.sendStatus(404).catch(err => {
-                return err
-            });
+            res.sendStatus(404)
         } else {
-            res.sendStatus(500).catch(err => {
-                return err
-            });
+            res.sendStatus(500)
         }
         console.error('something went wrong', err);
     });
 
 });
+
 app.get('/generator/:id/stop', tokenCheck, function (req, res) {
     console.log(`we're in stop`);
     console.log('All the flows', flows);
+    generator.deleteFlow(flowsCollection , req.params.id).then((data) => {
+        console.log('data here ' , data)
+    });
     const currentFlow = flows.filter(item => item.id === req.params.id)[0];
     currentFlow.stop();
     flows = flows.filter(function (item) {
