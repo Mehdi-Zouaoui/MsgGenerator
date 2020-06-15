@@ -24,12 +24,13 @@ class Generator extends React.Component {
     }
 
     delete(id) {
-        this.props.delete(id);
+        console.log(this.props.delete(id));
         console.log(this.props)
     }
 
     start(id) {
-        this.props.start(id);
+        console.log(this.props.start(id))
+
     }
 
     stop(id) {
@@ -42,7 +43,6 @@ class Generator extends React.Component {
     }
 
     render() {
-
         if (this.state.redirect) {
             return <Redirect to={this.state.redirect}/>
         }
@@ -76,7 +76,7 @@ class Generator extends React.Component {
 
                                 <DeleteModal delete={this.delete.bind(this)} id={generator._id}/>
                                 <ControlButton stop={this.stop.bind(this)} start={this.start.bind(this)}
-                                               id={generator._id}/>
+                                               id={generator._id} isStarted={generator.isStarted}/>
                             </div>
 
 

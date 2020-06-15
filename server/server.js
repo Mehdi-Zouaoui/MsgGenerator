@@ -11,14 +11,13 @@ let flows = [];
 const nameArray = require('./data/prenom');
 let db = [];
 let collection = null;
-let flowsCollection = null
+let flowsCollection = null;
 const generator = require('./api/generator');
 const token = "zkjndpzkjn";
 
 app.use(cookieParser());
 app.use(bodyParser());
 app.use(timeout(100000));
-
 
 
 async function createFlow(item) {
@@ -45,8 +44,10 @@ app.listen(port, function () {
             flowsCollection = data;
             generator.getGenerators(flowsCollection).then(dbFlows => {
                 dbFlows.forEach((dbFlow) => {
-                const flow  = new Flow(dbFlow.id, nameArray, dbFlow.speed, dbFlow.socialNetworks, dbFlow.keywords.join('\n'), dbFlow.model.join('\n'), dbFlow.minNumber, dbFlow.maxNumber);
-               flow.start();
+                    const flow = new Flow(dbFlow.id, nameArray, dbFlow.speed, dbFlow.socialNetworks, dbFlow.keywords.join('\n'), dbFlow.model.join('\n'), dbFlow.minNumber, dbFlow.maxNumber);
+                    flow.start();
+                    flows.push(flow);
+                    console.log(flows)
                 })
             })
         }).catch((err) => {
@@ -78,11 +79,8 @@ app.get('/generators', tokenCheck, function (req, res, err) {
 });
 
 app.delete('/generator/:id', tokenCheck, function (req, res, err) {
-    console.log('I receive a delete request');
-    console.log(req.params.id);
 
     generator.deleteGenerator(collection, req.params.id).then((item) => {
-        console.log(item);
         const currentFlow = flows.filter(item => item.id === req.params.id)[0];
         if (currentFlow) currentFlow.stop();
         flows = flows.filter(function (item) {
@@ -102,7 +100,7 @@ app.delete('/generator/:id', tokenCheck, function (req, res, err) {
 app.get('/generator/:id', tokenCheck, function (req, res) {
     console.log('get id', req.params.id);
     generator.getGenerator(collection, req.params.id, req, res).then((item) => {
-        console.log('Server item', item);
+
         res.json({'updatedGenerator': item});
     }).catch((err) => {
         if (!req.params.id) {
@@ -120,12 +118,21 @@ app.get('/generator/:id', tokenCheck, function (req, res) {
 
 app.get('/generator/:id/start', tokenCheck, function (req, res) {
     console.log(`we're in start`);
-
     generator.getGenerator(collection, req.params.id, req, res).then((item) => {
-        console.log('Server item', item);
         const newFlow = new Flow(req.params.id, nameArray, item.speed, item.socialNetworks, item.keywords, item.generatorModel, item.minNumber, item.maxNumber);
-
-        createFlow(newFlow).then(r => console.log(r));
+        generator.updateGenerator(collection, req.params.id,
+            {
+                name: item.name,
+                socialNetworks: item.socialNetworks,
+                speed: item.speed,
+                keywords: item.keywords,
+                minNumber: item.minNumber,
+                maxNumber: item.maxNumber,
+                generatorModel: item.generatorModel,
+                isStarted: true
+            }).then((item) => {
+            res.json({'isStarted': item});
+        });
         newFlow.start();
     }).catch((err) => {
         if (!req.params.id) {
@@ -141,11 +148,28 @@ app.get('/generator/:id/start', tokenCheck, function (req, res) {
 app.get('/generator/:id/stop', tokenCheck, function (req, res) {
     console.log(`we're in stop`);
     console.log('All the flows', flows);
-    generator.deleteFlow(flowsCollection , req.params.id).then((data) => {
-        console.log('data here ' , data)
+    generator.getGenerator(collection, req.params.id, req, res).then((item) => {
+        const newFlow = new Flow(req.params.id, nameArray, item.speed, item.socialNetworks, item.keywords, item.generatorModel, item.minNumber, item.maxNumber);
+        generator.updateGenerator(collection, req.params.id,
+            {
+                name: item.name,
+                socialNetworks: item.socialNetworks,
+                speed: item.speed,
+                keywords: item.keywords,
+                minNumber: item.minNumber,
+                maxNumber: item.maxNumber,
+                generatorModel: item.generatorModel,
+                isStarted: false
+            });
+        newFlow.start();
+    }).catch((err) => {
+        if (!req.params.id) {
+            res.sendStatus(404)
+        } else {
+            res.sendStatus(500)
+        }
+        console.error('something went wrong', err);
     });
-    const currentFlow = flows.filter(item => item.id === req.params.id)[0];
-    currentFlow.stop();
     flows = flows.filter(function (item) {
         return item.id !== req.params.id;
     });
@@ -189,7 +213,8 @@ app.put('/generator', tokenCheck, function (req, res) {
         keywords: req.body.keywords,
         minNumber: req.body.minNumber,
         maxNumber: req.body.maxNumber,
-        generatorModel: req.body.generatorModel
+        generatorModel: req.body.generatorModel,
+        isStarted: false
     };
     generator.createGenerator(collection, newGenerator).then((item) => {
         console.log(item);

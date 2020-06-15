@@ -37,21 +37,21 @@ class GeneratorList extends React.Component {
     }
 
     async refresh() {
-        let success = false ;
+        let success = false;
         const response = await fetch('/generators').then((res) => {
             if (res.status === 401) {
                 auth.logout();
                 this.setState({redirect: './login'})
             }
-            if(res.status === 200){
-               success = true;
-               return res
+            if (res.status === 200) {
+                success = true;
+                return res
             }
         });
-        if(success){
+        if (success) {
             const data = await response.json();
             return this.setState({generatorsArray: data.generators, error: false});
-        }else {
+        } else {
             console.log(`Something went wrong`)
         }
     }
@@ -85,9 +85,11 @@ class GeneratorList extends React.Component {
     }
 
     startFlow(id) {
-        axios.get('/generator/' + id + '/start').then(() => {
-            console.log('flow started')
-        }).catch(err => {
+        axios.get('/generator/' + id + '/start').then((generator) => {
+            console.log( generator.data.isStarted.ops[0].isStarted);
+            return generator.data.isStarted.ops[0].isStarted;
+
+        }).catch(err => {   // console.log('my datas' , data );
             return err
         })
     }
@@ -111,17 +113,21 @@ class GeneratorList extends React.Component {
     };
 
     render() {
+
         if (this.state.redirect) {
             return <Redirect to={this.state.redirect}/>
         }
+
         return (
             <div style={{height: "100vh"}} className=" bg-dark text-center">
                 <div className="row col-12 m-auto">
                     <h1 className='my-3 text-light col-10'> Generators Liste</h1>
-                    <button className=" mt-4 btn btn-info h-100 col-2 mb-2" onClick={this.redirectTo.bind(this)}>+ Générateur</button>
+                    <button className=" mt-4 btn btn-info h-100 col-2 mb-2" onClick={this.redirectTo.bind(this)}>+
+                        Générateur
+                    </button>
                 </div>
                 <div>{this.state.error ? <AlertComponent/> : ''}</div>
-                {this.state.generatorsArray.length > 0 ? <Generator  delete={this.deleteGenerator.bind(this)}
+                {this.state.generatorsArray.length > 0 ? <Generator delete={this.deleteGenerator.bind(this)}
                                                                     array={this.state.generatorsArray}
                                                                     id={this.update.bind(this)}
                                                                     start={this.startFlow.bind(this)}

@@ -10,7 +10,7 @@ function getGenerators(collection) {
 
 function createGenerator(collection, item) {
     return collection.insertOne(item)
-        .then(res => console.log('Element as been pushed to database', res))
+        .then(res => console.log('Element as been pushed to database'))
         .catch(err => console.error('failed to push to dabase', err))
 }
 
@@ -36,7 +36,7 @@ function deleteGenerator(collection, id) {
     console.log('deleted');
     return collection.deleteOne({_id: new mongo.ObjectID(id)})
         .then((res) => {
-            console.log('Deleted', res);
+            console.log('Deleted');
             return res
         })
         .catch((err) => {
@@ -49,7 +49,7 @@ function deleteFlow(collection, id) {
     console.log('deleted');
     return collection.deleteOne({id: id})
         .then((res) => {
-            console.log('Deleted', res);
+            console.log('Deleted');
             return res
         })
         .catch((err) => {
