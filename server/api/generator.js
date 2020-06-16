@@ -16,7 +16,7 @@ function createGenerator(collection, item) {
 
 function getGenerator(collection, id) {
     return collection.findOne({_id: new mongo.ObjectID(id)}).then((item) => {
-        console.log(`item de l'api` + item);
+        // console.log(`item de l'api` + item);
         return item;
     }).catch(err => console.log(err))
 }
@@ -24,7 +24,7 @@ function getGenerator(collection, id) {
 function updateGenerator(collection, id, objectUpdated) {
     console.log('object', objectUpdated);
     return collection.replaceOne({_id: ObjectId(id)}, objectUpdated).then((res) => {
-        console.log('Updated', res);
+        // console.log('Updated', res);
         return res
     }).catch((err) => {
         console.error('failed with error', err);
@@ -45,19 +45,6 @@ function deleteGenerator(collection, id) {
 
         });
 }
-function deleteFlow(collection, id) {
-    console.log('deleted');
-    return collection.deleteOne({id: id})
-        .then((res) => {
-            console.log('Deleted');
-            return res
-        })
-        .catch((err) => {
-            console.error('failed with error', err);
-            throw err
-
-        });
-}
 
 
 module.exports = {
@@ -66,6 +53,6 @@ module.exports = {
     createGenerator,
     getGenerator,
     updateGenerator,
-    deleteFlow
+
 };
 

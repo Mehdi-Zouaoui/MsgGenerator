@@ -11,18 +11,12 @@ let flows = [];
 const nameArray = require('./data/prenom');
 let db = [];
 let collection = null;
-let flowsCollection = null;
 const generator = require('./api/generator');
 const token = "zkjndpzkjn";
 
 app.use(cookieParser());
 app.use(bodyParser());
 app.use(timeout(100000));
-
-
-async function createFlow(item) {
-    return await generator.createGenerator(flowsCollection, item)
-}
 
 
 let tokenCheck = function (req, res, next) {
@@ -40,15 +34,15 @@ app.listen(port, function () {
     database.connect('generators').then((client) => {
         db = client.db;
         collection = client.collection;
-        db.createCollection('flows').then((data) => {
-            flowsCollection = data;
-            generator.getGenerators(flowsCollection).then(dbFlows => {
-                dbFlows.forEach((dbFlow) => {
-                    const flow = new Flow(dbFlow.id, nameArray, dbFlow.speed, dbFlow.socialNetworks, dbFlow.keywords.join('\n'), dbFlow.model.join('\n'), dbFlow.minNumber, dbFlow.maxNumber);
-                    flow.start();
-                    flows.push(flow);
-                    console.log(flows)
-                })
+        generator.getGenerators(collection).then(dbGenerators => {
+            let startedFlows = dbGenerators.filter(dbGenerator => dbGenerator.isStarted === true);
+            startedFlows.forEach((dbGenerator) => {
+                console.log(dbGenerator, 'HEOAZUEJGFOIHF');
+                const flow = new Flow(dbGenerator._id, nameArray, dbGenerator.speed, dbGenerator.socialNetworks, dbGenerator.keywords, dbGenerator.generatorModel, dbGenerator.minNumber, dbGenerator.maxNumber);
+                flow.start();
+                flows.push(flow);
+                console.log('ICI IL Y A LES FLOWS', flows)
+
             })
         }).catch((err) => {
             console.log(err)
@@ -100,7 +94,6 @@ app.delete('/generator/:id', tokenCheck, function (req, res, err) {
 app.get('/generator/:id', tokenCheck, function (req, res) {
     console.log('get id', req.params.id);
     generator.getGenerator(collection, req.params.id, req, res).then((item) => {
-
         res.json({'updatedGenerator': item});
     }).catch((err) => {
         if (!req.params.id) {
@@ -131,9 +124,11 @@ app.get('/generator/:id/start', tokenCheck, function (req, res) {
                 generatorModel: item.generatorModel,
                 isStarted: true
             }).then((item) => {
-            res.json({'isStarted': item});
+            res.json({'startedGenerator': item});
         });
+        flows.push(newFlow);
         newFlow.start();
+        // console.log(flows)
     }).catch((err) => {
         if (!req.params.id) {
             res.sendStatus(404)
@@ -147,9 +142,13 @@ app.get('/generator/:id/start', tokenCheck, function (req, res) {
 
 app.get('/generator/:id/stop', tokenCheck, function (req, res) {
     console.log(`we're in stop`);
-    console.log('All the flows', flows);
     generator.getGenerator(collection, req.params.id, req, res).then((item) => {
-        const newFlow = new Flow(req.params.id, nameArray, item.speed, item.socialNetworks, item.keywords, item.generatorModel, item.minNumber, item.maxNumber);
+        flows.forEach(flow => {
+            if (flow.id == item._id) {
+                flow.stop();
+                flows = flows.filter (item => item!== item.id);
+            }
+        });
         generator.updateGenerator(collection, req.params.id,
             {
                 name: item.name,
@@ -160,8 +159,10 @@ app.get('/generator/:id/stop', tokenCheck, function (req, res) {
                 maxNumber: item.maxNumber,
                 generatorModel: item.generatorModel,
                 isStarted: false
-            });
-        newFlow.start();
+            }).then((item) => {
+            res.json({'stoppedGenerator': item});
+        });
+
     }).catch((err) => {
         if (!req.params.id) {
             res.sendStatus(404)
@@ -170,12 +171,6 @@ app.get('/generator/:id/stop', tokenCheck, function (req, res) {
         }
         console.error('something went wrong', err);
     });
-    flows = flows.filter(function (item) {
-        return item.id !== req.params.id;
-    });
-    console.log('All the flows', flows);
-    res.sendStatus(200)
-
 });
 
 app.put('/generator/:id', tokenCheck, function (req, res) {

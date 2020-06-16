@@ -10,24 +10,28 @@ class ControlButton extends React.Component {
         }
     }
 
+    componentDidMount() {
+        this.props.isStarted(this.props.id).then((item) => {
+            this.setState({isStarted : item.data.updatedGenerator.isStarted})
+        })
+    }
+
     started(id) {
-        const data = this.props.start(id);
-        console.log(data);
-        // localStorage.setItem('isStarted' + id , true);
-        this.setState({isStarted: this.props.isStarted});
+        this.props.start(id).then((item) => {
+            console.log(item);
+            this.setState({isStarted: item.data.startedGenerator.ops[0].isStarted});
+        });
 
     }
 
     stopped(id) {
-        this.props.stop(id);
-        this.setState({isStarted: this.props.isStarted});
-        // this.setState({isStarted: localStorage.getItem('isStarted' + id)});
-
-
+        this.props.stop(id).then((item) => {
+            console.log(item);
+            this.setState({isStarted: item.data.stoppedGenerator.ops[0].isStarted});
+        });
     }
 
     render() {
-
         return (
             <div style={{paddingRight: 0, paddingLeft: 0}}>
                 {this.state.isStarted ?

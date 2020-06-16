@@ -85,18 +85,26 @@ class GeneratorList extends React.Component {
     }
 
     startFlow(id) {
-        axios.get('/generator/' + id + '/start').then((generator) => {
-            console.log( generator.data.isStarted.ops[0].isStarted);
-            return generator.data.isStarted.ops[0].isStarted;
-
-        }).catch(err => {   // console.log('my datas' , data );
+        console.log('GeneratorList');
+        return axios.get('/generator/' + id + '/start').then(generator => {
+            return generator;
+        }).catch(err => {
             return err
         })
     }
 
     stopFlow(id) {
-        axios.get('/generator/' + id + '/stop').then(() => {
-            console.log('flow stopped')
+        return axios.get('/generator/' + id + '/stop').then(generator => {
+            console.log('Axios stop request');
+            return generator;
+        }).catch(err => {
+            return err
+        })
+    }
+
+    isStarted(id) {
+        return axios.get('/generator/' + id).then(generator => {
+           return generator
         }).catch(err => {
             return err
         })
@@ -129,9 +137,11 @@ class GeneratorList extends React.Component {
                 <div>{this.state.error ? <AlertComponent/> : ''}</div>
                 {this.state.generatorsArray.length > 0 ? <Generator delete={this.deleteGenerator.bind(this)}
                                                                     array={this.state.generatorsArray}
+
                                                                     id={this.update.bind(this)}
                                                                     start={this.startFlow.bind(this)}
-                                                                    stop={this.stopFlow.bind(this)}/>
+                                                                    stop={this.stopFlow.bind(this)}
+                                                                    isStarted={this.isStarted.bind(this)}/>
                     : <h5 className="text-light">Veuillez créer une générateur de message </h5>}
             </div>
         );

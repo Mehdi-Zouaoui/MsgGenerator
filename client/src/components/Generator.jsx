@@ -29,12 +29,23 @@ class Generator extends React.Component {
     }
 
     start(id) {
-        console.log(this.props.start(id))
+        return this.props.start(id).then((item) => {
+            return item
+        })
+
+    }
+
+    isStarted(id) {
+        return this.props.isStarted(id).then((item) => {
+            return item
+        })
 
     }
 
     stop(id) {
-        this.props.stop(id);
+        return this.props.stop(id).then((item) => {
+            return item
+        });
     }
 
     update(id) {
@@ -66,19 +77,19 @@ class Generator extends React.Component {
                             <h5>Modèle </h5>
                             <div>{generator.generatorModel}</div>
                         </div>
-                        <div className="col-2 d-flex flex-column justify-content-center align-items-center border" style={styles.col}>
-                            <div style={{paddingRight : 0 , paddingLeft : 0}} className=' d-flex  '>
+                        <div className="col-2 d-flex flex-column justify-content-center align-items-center border"
+                             style={styles.col}>
+                            <div style={{paddingRight: 0, paddingLeft: 0}} className=' d-flex  '>
                                 <button className="btn mr-1 h-100 btn-ico btn-outline-secondary"
                                         onClick={() => this.update(generator._id)}><FontAwesomeIcon
                                     icon={faEdit}
-                              />
+                                />
                                 </button>
 
                                 <DeleteModal delete={this.delete.bind(this)} id={generator._id}/>
                                 <ControlButton stop={this.stop.bind(this)} start={this.start.bind(this)}
-                                               id={generator._id} isStarted={generator.isStarted}/>
+                                               id={generator._id} isStarted={this.isStarted.bind(this)}/>
                             </div>
-
 
 
                         </div>
