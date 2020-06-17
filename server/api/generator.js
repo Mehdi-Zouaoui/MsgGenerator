@@ -22,7 +22,6 @@ function getGenerator(collection, id) {
 }
 
 function updateGenerator(collection, id, objectUpdated) {
-
     return collection.replaceOne({_id: ObjectId(id)}, objectUpdated).then((res) => {
         // console.log('Updated', res);
         return res

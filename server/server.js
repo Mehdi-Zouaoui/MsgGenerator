@@ -16,8 +16,7 @@ const token = "zkjndpzkjn";
 
 app.use(cookieParser());
 app.use(bodyParser());
-app.use(timeout(100000));
-
+app.use(timeout(10000000));
 
 let tokenCheck = function (req, res, next) {
     if (req.cookies.token) {
@@ -28,29 +27,18 @@ let tokenCheck = function (req, res, next) {
     }
 };
 
-app.listen(port, function () {
-    console.log(`Listening on port ${port}`);
-    database.connect('generators').then((client) => {
-        db = client.db;
-        collection = client.collection;
-        generator.getGenerators(collection).then(dbGenerators => {
-            let startedFlows = dbGenerators.filter(dbGenerator => dbGenerator.isStarted === true);
-            startedFlows.forEach((dbGenerator) => {
-                console.log(dbGenerator, 'HEOAZUEJGFOIHF');
-                const flow = new Flow(dbGenerator._id, nameArray, dbGenerator.speed, dbGenerator.socialNetworks, dbGenerator.keywords, dbGenerator.generatorModel, dbGenerator.minNumber, dbGenerator.maxNumber);
-                flow.start();
-                flows.push(flow);
-
-                console.log('ICI IL Y A LES FLOWS', flows)
-
+function initServer() {
+    app.listen(port, function () {
+        console.log(`Listening on port ${port}`);
+        database.connect('generators').then((client) => {
+            db = client.db;
+            collection = client.collection;
+            Flow.getAll(collection).then((items) => {
+                console.log('Static', items)
             })
-        }).catch((err) => {
-            console.log(err)
-        })
-
+        });
     });
-
-});
+}
 
 app.post('/login', function (req, res) {
     console.log('password', req.body.password);
@@ -64,12 +52,13 @@ app.post('/login', function (req, res) {
 
 app.get('/generators', tokenCheck, function (req, res, err) {
 
-    generator.getGenerators(collection).then((value) => {
+    Flow.getAll(collection).then((value) => {
         res.json({'generators': value});
     }).catch((err) => {
         res.sendStatus(500).catch((err) => console.error(err));
         console.error(err)
     });
+
 });
 
 app.delete('/generator/:id', tokenCheck, function (req, res, err) {
@@ -91,6 +80,7 @@ app.delete('/generator/:id', tokenCheck, function (req, res, err) {
         console.error('something went wrong', err);
     });
 });
+
 app.get('/generator/:id', tokenCheck, function (req, res) {
     console.log('get id', req.params.id);
     generator.getGenerator(collection, req.params.id, req, res).then((item) => {
@@ -223,4 +213,5 @@ app.put('/generator', tokenCheck, function (req, res) {
         console.error('something went wrong', err);
     });
 });
+initServer();
 

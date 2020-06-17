@@ -1,6 +1,5 @@
 import React from "react";
 import {Redirect} from "react-router-dom";
-import $ from "jquery";
 import DeleteModal from "./Modal";
 import {faTrash, faEdit} from "@fortawesome/free-solid-svg-icons";
 import ControlButton from "./ControlButton";
@@ -12,7 +11,6 @@ const styles = {
         paddingRight: 0
     }
 };
-
 
 class Generator extends React.Component {
     constructor(props) {
@@ -32,7 +30,6 @@ class Generator extends React.Component {
         return this.props.start(id).then((item) => {
             return item
         })
-
     }
 
     isStarted(id) {
