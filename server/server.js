@@ -30,7 +30,6 @@ let tokenCheck = function (req, res, next) {
 
 app.listen(port, function () {
     console.log(`Listening on port ${port}`);
-    console.log('mes flows', flows);
     database.connect('generators').then((client) => {
         db = client.db;
         collection = client.collection;
@@ -41,6 +40,7 @@ app.listen(port, function () {
                 const flow = new Flow(dbGenerator._id, nameArray, dbGenerator.speed, dbGenerator.socialNetworks, dbGenerator.keywords, dbGenerator.generatorModel, dbGenerator.minNumber, dbGenerator.maxNumber);
                 flow.start();
                 flows.push(flow);
+                console.log(flow);
                 console.log('ICI IL Y A LES FLOWS', flows)
 
             })
@@ -144,7 +144,7 @@ app.get('/generator/:id/stop', tokenCheck, function (req, res) {
     console.log(`we're in stop`);
     generator.getGenerator(collection, req.params.id, req, res).then((item) => {
         flows.forEach(flow => {
-            if (flow.id == item._id) {
+            if (JSON.stringify(flow.id) === JSON.stringify(item._id)) {
                 flow.stop();
                 flows = flows.filter (item => item!== item.id);
             }

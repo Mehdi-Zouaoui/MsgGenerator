@@ -173,8 +173,7 @@ class GeneratorForm extends React.Component {
             return <Redirect to={this.state.redirect}/>
         }
         return (
-            <div>
-
+            <div style={{height: "100vh"}} className=" bg-dark text-center">
                 <div>
                     <div className="row col-12 d-flex justify-content-center text-center m-auto my-5">
                     <h1 className="  col-10 text-light display-4">Formulaire de création</h1>
