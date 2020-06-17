@@ -40,7 +40,7 @@ app.listen(port, function () {
                 const flow = new Flow(dbGenerator._id, nameArray, dbGenerator.speed, dbGenerator.socialNetworks, dbGenerator.keywords, dbGenerator.generatorModel, dbGenerator.minNumber, dbGenerator.maxNumber);
                 flow.start();
                 flows.push(flow);
-                console.log(flow);
+
                 console.log('ICI IL Y A LES FLOWS', flows)
 
             })
@@ -128,7 +128,6 @@ app.get('/generator/:id/start', tokenCheck, function (req, res) {
         });
         flows.push(newFlow);
         newFlow.start();
-        // console.log(flows)
     }).catch((err) => {
         if (!req.params.id) {
             res.sendStatus(404)
@@ -137,16 +136,21 @@ app.get('/generator/:id/start', tokenCheck, function (req, res) {
         }
         console.error('something went wrong', err);
     });
-
 });
 
 app.get('/generator/:id/stop', tokenCheck, function (req, res) {
     console.log(`we're in stop`);
     generator.getGenerator(collection, req.params.id, req, res).then((item) => {
+        console.log(flows);
         flows.forEach(flow => {
             if (JSON.stringify(flow.id) === JSON.stringify(item._id)) {
                 flow.stop();
-                flows = flows.filter (item => item!== item.id);
+                const indexFlow = flows.indexOf(flow);
+                if (indexFlow >= 0) {
+                    console.log('index du flow courant' + indexFlow);
+                    flows.splice(indexFlow, 1);
+                    console.log(flows)
+                }
             }
         });
         generator.updateGenerator(collection, req.params.id,
