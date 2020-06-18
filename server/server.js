@@ -6,7 +6,9 @@ const bodyParser = require('body-parser');
 const password = "CliclicTV";
 const database = require('./database');
 const timeout = require('connect-timeout');
-const Flow = require('./api/flow');
+const Generator = require('./api/generator');
+const {Connection} = require('./database');
+let myCol = Connection.connect().then(collection => myCol = collection.collection);
 let flows = [];
 const nameArray = require('./data/prenom');
 let db = [];
@@ -27,14 +29,23 @@ let tokenCheck = function (req, res, next) {
     }
 };
 
-function initServer() {
+async function initServer() {
     app.listen(port, function () {
+        Connection.connect();
+
         console.log(`Listening on port ${port}`);
         database.connect('generators').then((client) => {
             db = client.db;
             collection = client.collection;
-            Flow.getAll(collection).then((items) => {
+            Generator.getAll(collection).then((items) => {
                 console.log('Static', items)
+                let startedGenerators = items.filter(dbGenerator => dbGenerator.isStarted === true);
+                startedGenerators.forEach((dbGenerator) => {
+                    const generator = new Generator(dbGenerator._id, nameArray, dbGenerator.speed, dbGenerator.socialNetworks, dbGenerator.keywords, dbGenerator.generatorModel, dbGenerator.minNumber, dbGenerator.maxNumber)
+                    generator.start();
+                    flows.push(generator)
+
+                })
             })
         });
     });
@@ -52,7 +63,7 @@ app.post('/login', function (req, res) {
 
 app.get('/generators', tokenCheck, function (req, res, err) {
 
-    Flow.getAll(collection).then((value) => {
+    Generator.getAll(collection).then((value) => {
         res.json({'generators': value});
     }).catch((err) => {
         res.sendStatus(500).catch((err) => console.error(err));
@@ -63,7 +74,7 @@ app.get('/generators', tokenCheck, function (req, res, err) {
 
 app.delete('/generator/:id', tokenCheck, function (req, res, err) {
 
-    generator.deleteGenerator(collection, req.params.id).then((item) => {
+    Generator.delete(collection, req.params.id).then((item) => {
         const currentFlow = flows.filter(item => item.id === req.params.id)[0];
         if (currentFlow) currentFlow.stop();
         flows = flows.filter(function (item) {
@@ -79,11 +90,12 @@ app.delete('/generator/:id', tokenCheck, function (req, res, err) {
         }
         console.error('something went wrong', err);
     });
+
 });
 
 app.get('/generator/:id', tokenCheck, function (req, res) {
     console.log('get id', req.params.id);
-    generator.getGenerator(collection, req.params.id, req, res).then((item) => {
+    Generator.getById(collection, req.params.id, req, res).then((item) => {
         res.json({'updatedGenerator': item});
     }).catch((err) => {
         if (!req.params.id) {
@@ -101,9 +113,9 @@ app.get('/generator/:id', tokenCheck, function (req, res) {
 
 app.get('/generator/:id/start', tokenCheck, function (req, res) {
     console.log(`we're in start`);
-    generator.getGenerator(collection, req.params.id, req, res).then((item) => {
-        const newFlow = new Flow(req.params.id, nameArray, item.speed, item.socialNetworks, item.keywords, item.generatorModel, item.minNumber, item.maxNumber);
-        generator.updateGenerator(collection, req.params.id,
+    Generator.getById(collection, req.params.id, req, res).then((item) => {
+        const newFlow = new Generator(req.params.id, nameArray, item.speed, item.socialNetworks, item.keywords, item.generatorModel, item.minNumber, item.maxNumber);
+        Generator.save(collection, req.params.id,
             {
                 name: item.name,
                 socialNetworks: item.socialNetworks,
@@ -130,7 +142,7 @@ app.get('/generator/:id/start', tokenCheck, function (req, res) {
 
 app.get('/generator/:id/stop', tokenCheck, function (req, res) {
     console.log(`we're in stop`);
-    generator.getGenerator(collection, req.params.id, req, res).then((item) => {
+    Generator.getById(collection, req.params.id, req, res).then((item) => {
         console.log(flows);
         flows.forEach(flow => {
             if (JSON.stringify(flow.id) === JSON.stringify(item._id)) {
@@ -143,7 +155,7 @@ app.get('/generator/:id/stop', tokenCheck, function (req, res) {
                 }
             }
         });
-        generator.updateGenerator(collection, req.params.id,
+        Generator.save(collection, req.params.id,
             {
                 name: item.name,
                 socialNetworks: item.socialNetworks,
@@ -179,7 +191,7 @@ app.put('/generator/:id', tokenCheck, function (req, res) {
         generatorModel: req.body.generatorModel
     };
     console.log('Update', updatedGenerator);
-    generator.updateGenerator(collection, req.params.id, updatedGenerator).then(() => {
+    Generator.save(collection, req.params.id, updatedGenerator).then(() => {
         res.sendStatus(200);
     }).catch((err) => {
         if (!req.params.id) {
@@ -205,7 +217,7 @@ app.put('/generator', tokenCheck, function (req, res) {
         generatorModel: req.body.generatorModel,
         isStarted: false
     };
-    generator.createGenerator(collection, newGenerator).then((item) => {
+    Generator.create(collection, newGenerator).then((item) => {
         console.log(item);
         res.sendStatus(200);
     }).catch((err) => {
