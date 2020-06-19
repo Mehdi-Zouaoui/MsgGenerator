@@ -8,7 +8,7 @@ const database = require('./database');
 const timeout = require('connect-timeout');
 const Generator = require('./api/generator');
 const {Connection} = require('./database');
-let myCol = Connection.connect().then(collection => myCol = collection.collection);
+
 let flows = [];
 const nameArray = require('./data/prenom');
 let db = [];
@@ -31,24 +31,19 @@ let tokenCheck = function (req, res, next) {
 
 async function initServer() {
     app.listen(port, function () {
-        Connection.connect();
-
-        console.log(`Listening on port ${port}`);
-        database.connect('generators').then((client) => {
-            db = client.db;
-            collection = client.collection;
-            Generator.getAll(collection).then((items) => {
-                console.log('Static', items)
+        Connection.connect().then(() => {
+            Generator.getAll().then((items) => {
+                console.log('Static', items);
                 let startedGenerators = items.filter(dbGenerator => dbGenerator.isStarted === true);
                 startedGenerators.forEach((dbGenerator) => {
                     const generator = new Generator(dbGenerator._id, nameArray, dbGenerator.speed, dbGenerator.socialNetworks, dbGenerator.keywords, dbGenerator.generatorModel, dbGenerator.minNumber, dbGenerator.maxNumber)
                     generator.start();
                     flows.push(generator)
-
                 })
             })
         });
-    });
+        console.log(`Listening on port ${port}`);
+          });
 }
 
 app.post('/login', function (req, res) {
@@ -56,6 +51,7 @@ app.post('/login', function (req, res) {
     if (password === req.body.password) {
         console.log('req', req.body.password);
         res.cookie('token', token, {maxAge: 900000, httpOnly: true});
+
         res.json({logged: true});
         console.log('WELCOME TO MESSAGE GENERATOR');
     } else res.status(400).send({error: 'YOUR PASSWORD IS NOT DEFINED'}); // error 500 c'est pour les erreurs inattendues côté serveur. Pour un mauvais mot de passe on met plutot : 400 ou 401. Voici là liste des code : https://fr.wikipedia.org/wiki/Liste_des_codes_HTTP
@@ -63,7 +59,7 @@ app.post('/login', function (req, res) {
 
 app.get('/generators', tokenCheck, function (req, res, err) {
 
-    Generator.getAll(collection).then((value) => {
+    Generator.getAll().then((value) => {
         res.json({'generators': value});
     }).catch((err) => {
         res.sendStatus(500).catch((err) => console.error(err));
@@ -74,7 +70,7 @@ app.get('/generators', tokenCheck, function (req, res, err) {
 
 app.delete('/generator/:id', tokenCheck, function (req, res, err) {
 
-    Generator.delete(collection, req.params.id).then((item) => {
+    Generator.delete(req.params.id).then((item) => {
         const currentFlow = flows.filter(item => item.id === req.params.id)[0];
         if (currentFlow) currentFlow.stop();
         flows = flows.filter(function (item) {
@@ -95,7 +91,7 @@ app.delete('/generator/:id', tokenCheck, function (req, res, err) {
 
 app.get('/generator/:id', tokenCheck, function (req, res) {
     console.log('get id', req.params.id);
-    Generator.getById(collection, req.params.id, req, res).then((item) => {
+    Generator.getById(req.params.id, req, res).then((item) => {
         res.json({'updatedGenerator': item});
     }).catch((err) => {
         if (!req.params.id) {
@@ -113,9 +109,9 @@ app.get('/generator/:id', tokenCheck, function (req, res) {
 
 app.get('/generator/:id/start', tokenCheck, function (req, res) {
     console.log(`we're in start`);
-    Generator.getById(collection, req.params.id, req, res).then((item) => {
+    Generator.getById(req.params.id, req, res).then((item) => {
         const newFlow = new Generator(req.params.id, nameArray, item.speed, item.socialNetworks, item.keywords, item.generatorModel, item.minNumber, item.maxNumber);
-        Generator.save(collection, req.params.id,
+        Generator.save(req.params.id,
             {
                 name: item.name,
                 socialNetworks: item.socialNetworks,
@@ -142,7 +138,7 @@ app.get('/generator/:id/start', tokenCheck, function (req, res) {
 
 app.get('/generator/:id/stop', tokenCheck, function (req, res) {
     console.log(`we're in stop`);
-    Generator.getById(collection, req.params.id, req, res).then((item) => {
+    Generator.getById(req.params.id, req, res).then((item) => {
         console.log(flows);
         flows.forEach(flow => {
             if (JSON.stringify(flow.id) === JSON.stringify(item._id)) {
@@ -155,7 +151,7 @@ app.get('/generator/:id/stop', tokenCheck, function (req, res) {
                 }
             }
         });
-        Generator.save(collection, req.params.id,
+        Generator.save(req.params.id,
             {
                 name: item.name,
                 socialNetworks: item.socialNetworks,
@@ -191,7 +187,7 @@ app.put('/generator/:id', tokenCheck, function (req, res) {
         generatorModel: req.body.generatorModel
     };
     console.log('Update', updatedGenerator);
-    Generator.save(collection, req.params.id, updatedGenerator).then(() => {
+    Generator.save(req.params.id, updatedGenerator).then(() => {
         res.sendStatus(200);
     }).catch((err) => {
         if (!req.params.id) {
@@ -217,7 +213,7 @@ app.put('/generator', tokenCheck, function (req, res) {
         generatorModel: req.body.generatorModel,
         isStarted: false
     };
-    Generator.create(collection, newGenerator).then((item) => {
+    Generator.create(newGenerator).then((item) => {
         console.log(item);
         res.sendStatus(200);
     }).catch((err) => {
@@ -225,5 +221,7 @@ app.put('/generator', tokenCheck, function (req, res) {
         console.error('something went wrong', err);
     });
 });
-initServer();
+initServer().then(() => {
+    console.log('Server is ')
+});
 
