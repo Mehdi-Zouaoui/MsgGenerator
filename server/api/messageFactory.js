@@ -9,6 +9,7 @@ class MessageFactory {
     }
 
     generateMessage() {
+        console.log('jbc' , this.model);
         this.generatedMessage = '';
         this.model.forEach(model => {
             if (model === '[number]') {

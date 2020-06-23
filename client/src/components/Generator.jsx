@@ -22,8 +22,9 @@ class Generator extends React.Component {
     }
 
     delete(id) {
-        console.log(this.props.delete(id));
-        console.log(this.props)
+      this.props.delete(id);
+
+
     }
 
     start(id) {
@@ -51,12 +52,15 @@ class Generator extends React.Component {
     }
 
     render() {
+        // this.props.array.forEach(generator =>{
+        //     console.log('GENERATOR OJIABC' , generator)
+        // });
         if (this.state.redirect) {
             return <Redirect to={this.state.redirect}/>
         }
         return (
             this.props.array.map(generator =>
-                <li className="card" key={generator._id}>
+                <li className="card" key={generator.id}>
 
                     <div className=" d-flex">
                         <h2 className="card-header col-2 border ">{generator.name}</h2>
@@ -78,14 +82,14 @@ class Generator extends React.Component {
                              style={styles.col}>
                             <div style={{paddingRight: 0, paddingLeft: 0}} className=' d-flex  '>
                                 <button className="btn mr-1 h-100 btn-ico btn-outline-secondary"
-                                        onClick={() => this.update(generator._id)}><FontAwesomeIcon
+                                        onClick={() => this.update(generator.id)}><FontAwesomeIcon
                                     icon={faEdit}
                                 />
                                 </button>
 
-                                <DeleteModal delete={this.delete.bind(this)} id={generator._id}/>
+                                <DeleteModal delete={this.delete.bind(this)} id={generator.id}/>
                                 <ControlButton stop={this.stop.bind(this)} start={this.start.bind(this)}
-                                               id={generator._id} isStarted={this.isStarted.bind(this)}/>
+                                               id={generator.id} isStarted={this.isStarted.bind(this)}/>
                             </div>
 
 

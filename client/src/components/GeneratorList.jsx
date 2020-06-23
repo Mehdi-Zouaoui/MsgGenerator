@@ -87,7 +87,7 @@ class GeneratorList extends React.Component {
     startFlow(id) {
         console.log('GeneratorList');
         return axios.get('/generator/' + id + '/start').then(generator => {
-            return generator;
+          return generator
         }).catch(err => {
             return err
         })
@@ -104,7 +104,7 @@ class GeneratorList extends React.Component {
 
     isStarted(id) {
         return axios.get('/generator/' + id).then(generator => {
-           return generator
+            console.log(generator)
         }).catch(err => {
             return err
         })

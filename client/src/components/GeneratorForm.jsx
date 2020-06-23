@@ -30,7 +30,7 @@ class GeneratorForm extends React.Component {
             keywords: '',
             minNumber: 0,
             maxNumber: 0,
-            generatorModel: ''
+            model: ''
         };
 
 
@@ -62,7 +62,7 @@ class GeneratorForm extends React.Component {
                 keywords: data.keywords,
                 minNumber: data.minNumber,
                 maxNumber: data.maxNumber,
-                generatorModel: data.generatorModel
+                model: data.model
             });
             return data;
         }).catch((err) => {
@@ -87,7 +87,7 @@ class GeneratorForm extends React.Component {
     changeKeywords(event) {
         const value = event.target.value;
         this.setState({
-            keywords: value
+            keywords: value.split('\n')
         })
     }
 
@@ -101,7 +101,7 @@ class GeneratorForm extends React.Component {
     changeModel(event) {
         const value = event.target.value;
         this.setState({
-            generatorModel: value
+            model: value.split('\n')
         })
     }
 
@@ -267,7 +267,7 @@ class GeneratorForm extends React.Component {
                                     <div className="card-header bg-info h5 text-light">Modèle de commentaires</div>
                                     <textarea className="form-control" id="exampleFormControlTextarea1"
                                               placeholder={'[word]' + '\n' + '[number]'}
-                                              value={this.state.generatorModel.toString().split(',').join('\n')}
+                                              value={this.state.model.toString().split(',').join('\n')}
                                               onChange={this.changeModel} rows="3"/>
                                 </div>
                             </div>
