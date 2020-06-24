@@ -2,12 +2,14 @@ const MessageFactory = require('./messageFactory');
 const mongo = require('mongodb');
 const ObjectId = require('mongodb').ObjectID;
 const {Connection} = require('../database');
+const nameArray = require('../data/prenom');
 let collection = null;
 Connection.connect().then(client => collection = client.collection);
 
 class Generator {
-    constructor({_id, speed, socialNetworks, keywords, model, minNumber, maxNumber}) {
+    constructor({_id, name, speed, socialNetworks, keywords, model, minNumber, maxNumber}) {
         this.id = _id;
+        this.name = name;
         this.isStarted = false;
         this.minNumber = minNumber;
         this.maxNumber = maxNumber;
@@ -71,16 +73,16 @@ class Generator {
     update() {
     }
 
-    start(nameArray) {
-        console.log(nameArray);
-        this.isStarted = true;
+    start() {
         this.author = nameArray[Math.floor(Math.random() * nameArray.length)];
         console.log(this.author + ' says :  ' + this.message.generateMessage());
-        this.timeout = setTimeout(this.start.bind(this), (60000 / this.speed));
+        this.timeout = setTimeout(() => {
+            this.start()
+        }, (60000 / this.speed));
+        console.log(this.timeout)
     }
 
     stop() {
-        this.isStarted = false;
         clearTimeout(this.timeout);
         console.log(`Flow ${this.id} stopped`);
     }

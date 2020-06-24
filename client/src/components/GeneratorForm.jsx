@@ -80,7 +80,7 @@ class GeneratorForm extends React.Component {
     changeName(event) {
         const value = event.target.value;
         this.setState({
-            name: value
+            name:value
         })
     }
 

@@ -20,6 +20,11 @@ class GeneratorList extends React.Component {
             error: false,
             updated: false
         };
+        this.deleteGenerator = this.deleteGenerator.bind(this);
+        this.update = this.update.bind(this);
+        this.startFlow = this.startFlow.bind(this);
+        this.stopFlow = this.stopFlow.bind(this);
+        this.isStarted = this.isStarted.bind(this);
 
     }
 
@@ -87,7 +92,7 @@ class GeneratorList extends React.Component {
     startFlow(id) {
         console.log('GeneratorList');
         return axios.get('/generator/' + id + '/start').then(generator => {
-          return generator
+            return generator
         }).catch(err => {
             return err
         })
@@ -135,13 +140,12 @@ class GeneratorList extends React.Component {
                     </button>
                 </div>
                 <div>{this.state.error ? <AlertComponent/> : ''}</div>
-                {this.state.generatorsArray.length > 0 ? <Generator delete={this.deleteGenerator.bind(this)}
+                {this.state.generatorsArray.length > 0 ? <Generator delete={this.deleteGenerator}
                                                                     array={this.state.generatorsArray}
-
-                                                                    id={this.update.bind(this)}
-                                                                    start={this.startFlow.bind(this)}
-                                                                    stop={this.stopFlow.bind(this)}
-                                                                    isStarted={this.isStarted.bind(this)}/>
+                                                                    id={this.update}
+                                                                    start={this.startFlow}
+                                                                    stop={this.stopFlow}
+                                                                    isStarted={this.isStarted}/>
                     : <h5 className="text-light">Veuillez créer une générateur de message </h5>}
             </div>
         );

@@ -18,7 +18,7 @@ const token = "zkjndpzkjn";
 
 app.use(cookieParser());
 app.use(bodyParser());
-app.use(timeout(10000000));
+app.use(timeout(1000000000));
 
 let tokenCheck = function (req, res, next) {
     if (req.cookies.token) {
@@ -121,8 +121,9 @@ app.get('/generator/:id', tokenCheck, function (req, res) {
 app.get('/generator/:id/start', tokenCheck, function (req, res) {
     console.log(`we're in start`);
     Generator.getById(req.params.id, req, res).then((item) => {
+        console.log(req.params.id);
         flows.push(item);
-        item.start(nameArray);
+        item.start();
         // console.log(item)
         // const newFlow = new Generator(req.params.id, nameArray, item.speed, item.socialNetworks, item.keywords, item.generatorModel, item.minNumber, item.maxNumber);
         item.save(item.id,
@@ -133,8 +134,8 @@ app.get('/generator/:id/start', tokenCheck, function (req, res) {
                 keywords: item.keywords,
                 minNumber: item.minNumber,
                 maxNumber: item.maxNumber,
-                generatorModel: item.generatorModel,
-                isStarted: true
+                model: item.model,
+                isStarted: true,
             }).then((item) => {
             res.json({'startedGenerator': item});
         });
@@ -152,7 +153,7 @@ app.get('/generator/:id/start', tokenCheck, function (req, res) {
 app.get('/generator/:id/stop', tokenCheck, function (req, res) {
     console.log(`we're in stop`);
     Generator.getById(req.params.id, req, res).then((item) => {
-
+        console.log(req.params.id);
         item.stop();
         item.save(item.id,
             {
@@ -162,7 +163,7 @@ app.get('/generator/:id/stop', tokenCheck, function (req, res) {
                 keywords: item.keywords,
                 minNumber: item.minNumber,
                 maxNumber: item.maxNumber,
-                generatorModel: item.generatorModel,
+                model: item.model,
                 isStarted: false
             }).then((item) => {
             res.json({'stoppedGenerator': item});
@@ -213,44 +214,57 @@ app.put('/generator/:id', tokenCheck, function (req, res) {
         keywords: req.body.keywords,
         minNumber: req.body.minNumber,
         maxNumber: req.body.maxNumber,
-        generatorModel: req.body.generatorModel
+        model: req.body.model
     };
     console.log('Update', updatedGenerator);
-    Generator.save(req.params.id, updatedGenerator).then(() => {
-        res.sendStatus(200);
-    }).catch((err) => {
-        if (!req.params.id) {
-            res.sendStatus(404);
-        } else {
+    Generator.getById(req.params.id, req, res).then((item) => {
+        item.save(item.id, updatedGenerator).then(() => {
+            res.sendStatus(200);
+        }).catch((err) => {
+            if (!req.params.id) {
+                res.sendStatus(404);
+            } else {
+                res.sendStatus(500);
+            }
+            console.error('something went wrong', err);
+        });
+
+        // Generator.save(req.params.id, updatedGenerator).then(() => {
+        //     res.sendStatus(200);
+        // }).catch((err) => {
+        //     if (!req.params.id) {
+        //         res.sendStatus(404);
+        //     } else {
+        //         res.sendStatus(500);
+        //     }
+        //     console.error('something went wrong', err);
+        // });
+
+    });
+});
+
+    app.put('/generator', tokenCheck, function (req, res) {
+        console.log("HEY HELLO");
+        console.log('Data', req.body);
+        let newGenerator = {
+            name: req.body.name,
+            socialNetworks: req.body.socialNetworks,
+            speed: req.body.speed,
+            keywords: req.body.keywords,
+            minNumber: req.body.minNumber,
+            maxNumber: req.body.maxNumber,
+            model: req.body.model,
+            isStarted: false
+        };
+        Generator.create(newGenerator).then((item) => {
+            console.log(item);
+            res.sendStatus(200);
+        }).catch((err) => {
             res.sendStatus(500);
-        }
-        console.error('something went wrong', err);
+            console.error('something went wrong', err);
+        });
     });
-
-});
-
-app.put('/generator', tokenCheck, function (req, res) {
-    console.log("HEY HELLO");
-    console.log('Data', req.body);
-    let newGenerator = {
-        name: req.body.name,
-        socialNetworks: req.body.socialNetworks,
-        speed: req.body.speed,
-        keywords: req.body.keywords,
-        minNumber: req.body.minNumber,
-        maxNumber: req.body.maxNumber,
-        generatorModel: req.body.generatorModel,
-        isStarted: false
-    };
-    Generator.create(newGenerator).then((item) => {
-        console.log(item);
-        res.sendStatus(200);
-    }).catch((err) => {
-        res.sendStatus(500);
-        console.error('something went wrong', err);
+    initServer().then(() => {
+        console.log('Server is ')
     });
-});
-initServer().then(() => {
-    console.log('Server is ')
-});
 

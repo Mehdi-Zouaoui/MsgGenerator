@@ -76,7 +76,7 @@ class Generator extends React.Component {
 
                         <div className="col-2 border bg-light">
                             <h5>Modèle </h5>
-                            <div>{generator.generatorModel}</div>
+                            <div>{generator.model}</div>
                         </div>
                         <div className="col-2 d-flex flex-column justify-content-center align-items-center border"
                              style={styles.col}>
