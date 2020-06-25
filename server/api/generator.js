@@ -7,10 +7,10 @@ let collection = null;
 Connection.connect().then(client => collection = client.collection);
 
 class Generator {
-    constructor({_id, name, speed, socialNetworks, keywords, model, minNumber, maxNumber}) {
+    constructor({_id, name, speed, socialNetworks, keywords, model, minNumber, maxNumber , isStarted}) {
         this.id = _id;
         this.name = name;
-        this.isStarted = false;
+        this.isStarted = isStarted;
         this.minNumber = minNumber;
         this.maxNumber = maxNumber;
         this.speed = speed;
@@ -79,7 +79,7 @@ class Generator {
         this.timeout = setTimeout(() => {
             this.start()
         }, (60000 / this.speed));
-        console.log(this.timeout)
+
     }
 
     stop() {

@@ -12,9 +12,9 @@ class ControlButton extends React.Component {
 
     componentDidMount() {
 
-        this.props.isStarted(this.props.id).then((item) => {
+        this.props.isStarted(this.props.id).then(item => {
             console.log(item);
-            // this.setState({isStarted: item.data.updatedGenerator.isStarted})
+            this.setState({isStarted: item.data.updatedGenerator.isStarted})
         })
     }
 

@@ -109,7 +109,7 @@ class GeneratorList extends React.Component {
 
     isStarted(id) {
         return axios.get('/generator/' + id).then(generator => {
-            console.log(generator)
+            return generator;
         }).catch(err => {
             return err
         })
