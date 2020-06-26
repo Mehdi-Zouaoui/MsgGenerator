@@ -33,7 +33,7 @@ class GeneratorForm extends React.Component {
             model: ''
         };
 
-
+this.redirectTo = this.redirectTo.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.changeName = this.changeName.bind(this);
         this.changeKeywords = this.changeKeywords.bind(this);
@@ -177,7 +177,7 @@ class GeneratorForm extends React.Component {
                 <div>
                     <div className="row col-12 d-flex justify-content-center text-center m-auto my-5">
                     <h1 className="  col-10 text-light display-4">Formulaire de création</h1>
-                        <button className="mt-4 btn btn-warning h-100 col-1" onClick={this.redirectTo.bind(this)}> <FontAwesomeIcon style={{color : 'white'}} icon={faArrowAltCircleLeft} /></button>
+                        <button className="mt-4 btn btn-warning h-100 col-1" onClick={this.redirectTo}> <FontAwesomeIcon style={{color : 'white'}} icon={faArrowAltCircleLeft} /></button>
                     </div>
                     <form style={formStyle} method="PUT" onSubmit={this.handleSubmit}
                           className="mt-5 py-3 card col-10 bg-dark border border-info ">

@@ -62,7 +62,6 @@ class Generator {
 
     save(id, objectUpdated) {
         return collection.replaceOne({_id: ObjectId(id)}, objectUpdated).then((res) => {
-            // console.log('Updated', res);
             return res
         }).catch((err) => {
             console.error('failed with error', err);

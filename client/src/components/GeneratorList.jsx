@@ -25,6 +25,7 @@ class GeneratorList extends React.Component {
         this.startFlow = this.startFlow.bind(this);
         this.stopFlow = this.stopFlow.bind(this);
         this.isStarted = this.isStarted.bind(this);
+        this.redirectTo = this.redirectTo.bind(this);
 
     }
 
@@ -38,7 +39,6 @@ class GeneratorList extends React.Component {
 
     componentDidMount() {
         this.refresh().then(r => console.log(r));
-        console.log(this.state.generatorsArray)
     }
 
     async refresh() {
@@ -135,7 +135,7 @@ class GeneratorList extends React.Component {
             <div style={{height: "100vh"}} className=" bg-dark text-center">
                 <div className="row col-12 m-auto">
                     <h1 className='my-3 text-light col-10'> Generators Liste</h1>
-                    <button className=" mt-4 btn btn-info h-100 col-2 mb-2" onClick={this.redirectTo.bind(this)}>+
+                    <button className=" mt-4 btn btn-info h-100 col-2 mb-2" onClick={this.redirectTo}>+
                         Générateur
                     </button>
                 </div>

@@ -151,19 +151,6 @@ app.get('/generator/:id/stop', tokenCheck, function (req, res) {
             res.json({'stoppedGenerator': item});
         });
 
-        // console.log(flows);
-        // flows.forEach(flow => {
-        //     if (JSON.stringify(flow.id) === JSON.stringify(item._id)) {
-        //         flow.stop();
-        //         const indexFlow = flows.indexOf(flow);
-        //         if (indexFlow >= 0) {
-        //             console.log('index du flow courant' + indexFlow);
-        //             flows.splice(indexFlow, 1);
-        //             console.log(flows)
-        //         }
-        //     }
-        // });
-
     }).catch((err) => {
         if (!req.params.id) {
             res.sendStatus(404)

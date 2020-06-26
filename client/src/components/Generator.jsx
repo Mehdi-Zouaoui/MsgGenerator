@@ -18,11 +18,16 @@ class Generator extends React.Component {
         this.state = {
             redirect: null,
             error: false
-        }
+        };
+        this.isStarted = this.isStarted.bind(this);
+        this.start = this.start.bind(this);
+        this.stop = this.stop.bind(this);
+        this.delete = this.delete.bind(this);
     }
 
+
     delete(id) {
-      this.props.delete(id);
+        this.props.delete(id);
 
 
     }
@@ -52,9 +57,6 @@ class Generator extends React.Component {
     }
 
     render() {
-        // this.props.array.forEach(generator =>{
-        //     console.log('GENERATOR OJIABC' , generator)
-        // });
         if (this.state.redirect) {
             return <Redirect to={this.state.redirect}/>
         }
@@ -67,7 +69,7 @@ class Generator extends React.Component {
 
                         <div className="col-1 border">{generator.socialNetworks.join('\n')}</div>
                         <div
-                            className="col-3 d-flex bg-light  border justify-content-center align-items-center">{generator.keywords.length > 1 ? generator.keywords : 'text'}</div>
+                            className="col-3 d-flex bg-light  border justify-content-center align-items-center">{generator.keywords.length > 1 ? generator.keywords.join(' ') : 'text'}</div>
 
                         <div className="col-2 border">
                             <h5>Interval </h5>
@@ -76,7 +78,7 @@ class Generator extends React.Component {
 
                         <div className="col-2 border bg-light">
                             <h5>Modèle </h5>
-                            <div>{generator.model}</div>
+                            <div>{generator.model.join(' ')}</div>
                         </div>
                         <div className="col-2 d-flex flex-column justify-content-center align-items-center border"
                              style={styles.col}>
@@ -87,9 +89,9 @@ class Generator extends React.Component {
                                 />
                                 </button>
 
-                                <DeleteModal delete={this.delete.bind(this)} id={generator.id}/>
-                                <ControlButton stop={this.stop.bind(this)} start={this.start.bind(this)}
-                                               id={generator.id} isStarted={this.isStarted.bind(this)}/>
+                                <DeleteModal delete={this.delete} id={generator.id}/>
+                                <ControlButton stop={this.stop} start={this.start}
+                                               id={generator.id} isStarted={this.isStarted}/>
                             </div>
 
 

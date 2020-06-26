@@ -10,6 +10,8 @@ class DeleteModal extends React.Component {
         this.state = {
             show: false,
         };
+        this.handleClose = this.handleClose.bind(this);
+        this.handleShow = this.handleShow.bind(this);
     }
 
     handleClose() {
@@ -26,11 +28,11 @@ class DeleteModal extends React.Component {
     render() {
         return (
             <>
-                <Button variant="btn mr-1 h-100 btn-ico btn-outline-secondary" onClick={this.handleShow.bind(this)}>
+                <Button variant="btn mr-1 h-100 btn-ico btn-outline-secondary" onClick={this.handleShow}>
                     <FontAwesomeIcon icon={faTrash} />
                 </Button>
 
-                <Modal show={this.state.show} onHide={this.handleClose.bind(this)}>
+                <Modal show={this.state.show} onHide={this.handleClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Supprimer ?</Modal.Title>
                     </Modal.Header>
@@ -39,7 +41,7 @@ class DeleteModal extends React.Component {
                     <Button className='btn btn-success' onClick={() => this.delete(this.props.id)}>
                         Oui
                     </Button>
-                    <Button className='btn btn-danger' onClick={this.handleClose.bind(this)} >
+                    <Button className='btn btn-danger' onClick={this.handleClose} >
                         Non
                     </Button>
                     </Modal.Footer>
