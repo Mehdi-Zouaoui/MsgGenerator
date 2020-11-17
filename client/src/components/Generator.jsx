@@ -5,6 +5,7 @@ import {faTrash, faEdit} from "@fortawesome/free-solid-svg-icons";
 import ControlButton from "./ControlButton";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
+
 const styles = {
     col: {
         paddingLeft: 0,
